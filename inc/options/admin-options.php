@@ -2694,7 +2694,7 @@ function xi_csf_admin_options()
 }
 
 /**
- * 关于主题：开发者与交流入口。地址暂未公开，留空时按钮显示为「即将开放」
+ * 关于主题：开发者与交流入口（地址留空时按钮显示为「即将开放」）
  */
 function xi_about_links()
 {
@@ -2703,13 +2703,13 @@ function xi_about_links()
             'icon'  => 'fa-github',
             'title' => __('GitHub', 'xi'),
             'desc'  => __('源码、更新日志与问题反馈', 'xi'),
-            'url'   => '',
+            'url'   => 'https://github.com/ximangya/XITheme',
         ),
         array(
             'icon'  => 'fa-qq',
             'title' => __('QQ 交流群', 'xi'),
             'desc'  => __('使用交流、建议与新版本通知', 'xi'),
-            'url'   => '',
+            'url'   => 'https://qm.qq.com/q/4f5vzkJ0jC',
         ),
     );
 }
