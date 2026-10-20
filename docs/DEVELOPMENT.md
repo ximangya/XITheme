@@ -28,9 +28,10 @@ Start-Process php -ArgumentList '-S','127.0.0.1:8788','-t','dev-wp\site' `
 ```
 
 ```powershell
-# 确认端口与站点
-Get-NetTCPConnection -LocalPort 8788 -State Listen -ErrorAction SilentlyContinue
+# 确认站点可访问（最可靠的检查）
 (Invoke-WebRequest http://127.0.0.1:8788/ -UseBasicParsing).StatusCode
+# 端口被占时排查（普通权限下可能看不到其他用户的监听，需管理员）
+Get-NetTCPConnection -LocalPort 8788 -ErrorAction SilentlyContinue
 ```
 
 停止：关掉 `php -S` 进程（`Get-Process php | Stop-Process`，注意别误杀别的 PHP）。`php -S` 是单进程，**并发请求会排队**，压测/截图时不要同时开多个页面任务。
@@ -136,7 +137,7 @@ php -m                                   # 已加载扩展
 php --ini                                # 用的是哪个 ini
 php -l .\inc\functions\xi-bbs.php        # 单文件语法
 Get-Content dev-wp\site\wp-content\debug.log -Tail 50   # PHP 错误
-Get-NetTCPConnection -LocalPort 8788 -State Listen      # 端口是否被占
+(Invoke-WebRequest http://127.0.0.1:8788/ -UseBasicParsing).StatusCode  # 站点是否活着
 ```
 
 - `debug.log` 里的 `phar://...wp-cli.phar...Deprecated` 是 wp-cli 自身的问题，不是主题 bug；清空即可。
