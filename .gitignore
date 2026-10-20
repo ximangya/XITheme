@@ -1,0 +1,19 @@
+# 系统与编辑器
+.DS_Store
+Thumbs.db
+desktop.ini
+.idea/
+.vscode/*
+!.vscode/extensions.json
+
+# 本地依赖与构建产物
+node_modules/
+XRes/
+*.zip
+*.log
+
+# codestar 框架示例（不打包、不属于主题运行代码）
+/inc/codestar-framework/samples/
+
+# 本地开发环境（见 docs/DEVELOPMENT.md）
+/dev/
