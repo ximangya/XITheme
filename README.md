@@ -93,6 +93,16 @@ xi/
 └── style.css          主题信息
 ```
 
+## 开发
+
+接手开发前先读 [`AGENTS.md`](AGENTS.md)（约定速查），详细文档在 `docs/`：
+
+- [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md)：模块加载顺序、选项与数据模型、模板层级、Ajax / 区块 / 缓存。
+- [`docs/DESIGN-SYSTEM.md`](docs/DESIGN-SYSTEM.md)：WinUI 3 × 液态玻璃的令牌、材质分层、控件规范与反模式。
+- [`docs/DEVELOPMENT.md`](docs/DEVELOPMENT.md)：本地 WordPress 开发站、wp-cli、截图验收、打包与排障。
+
+主题无 npm / 无构建步骤，改完 PHP 跑一遍 `php -l` 即可；发布用父目录的 `python build_xi.py` 打包。
+
 ## 更新日志
 
 见 [CHANGELOG.md](CHANGELOG.md) 或 [Releases](https://github.com/ximangya/XITheme/releases)。
