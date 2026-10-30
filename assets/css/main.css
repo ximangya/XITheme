@@ -2236,11 +2236,13 @@ textarea.xi-writer-input { resize: vertical; }
 .xi-badges { display: inline-flex; flex-wrap: wrap; align-items: center; gap: 6px; }
 .xi-badges .xi-role, .xi-badges .xi-vip { margin: 0; vertical-align: 0; }
 .xi-role.is-administrator { color: #c2410c; background: rgba(234, 88, 12, .12); }
+.xi-role.is-xi_webmaster { color: #a16207; background: rgba(234, 179, 8, .16); }
 .xi-role.is-editor { color: #7c3aed; background: rgba(124, 58, 237, .12); }
 .xi-role.is-author { color: var(--xi-main-deep); background: var(--xi-main-soft); }
 .xi-role.is-contributor { color: #0369a1; background: rgba(3, 105, 161, .12); }
 .xi-role.is-subscriber, .xi-role.is-user { color: var(--xi-text-2); background: var(--xi-subtle-2); }
 [data-theme="dark"] .xi-role.is-administrator { color: #fdba74; }
+[data-theme="dark"] .xi-role.is-xi_webmaster { color: #fde047; }
 [data-theme="dark"] .xi-role.is-editor { color: #c4b5fd; }
 [data-theme="dark"] .xi-role.is-contributor { color: #7dd3fc; }
 .xi-identity {

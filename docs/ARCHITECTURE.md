@@ -40,7 +40,7 @@ WordPress
 `xi-brand-icons`（社交图标）→ `xi-beautify`（字体、LOGO 扫光、动态标题、灵动岛、飘落）→ `xi-menu-icons` → `xi-slider` → `xi-header`（顶部多功能组件：搜索、通知、登录态）。
 
 **用户与身份**
-`xi-user`（用户信息/头像菜单）→ `xi-mail`（SMTP、邮件模板、验证码）→ `xi-sms`（阿里云/腾讯云/短信宝）→ `xi-sign`（登录/注册/找回）→ `xi-assets`（积分、余额、签到、卡密）→ `xi-vip`（VIP 等级）→ `xi-pay`（易支付/支付宝官方 + 支付订单表）→ `xi-hide`（`[xi_hide]` 付费/隐藏内容）→ `xi-usercenter` → `xi-auth`（用户组权限）→ `xi-ban`（封号/禁言/IP）→ `xi-profile`（前台账号设置）→ `xi-oauth`（QQ/微信/微博/GitHub/Gitee/彩虹聚合）→ `xi-author`（作者页）。
+`xi-user`（用户信息/头像菜单）→ `xi-mail`（SMTP、邮件模板、验证码）→ `xi-sms`（阿里云/腾讯云/短信宝）→ `xi-sign`（登录/注册/找回）→ `xi-assets`（积分、余额、签到、卡密）→ `xi-vip`（VIP 等级）→ `xi-pay`（易支付/支付宝官方 + 支付订单表）→ `xi-hide`（`[xi_hide]` 付费/隐藏内容）→ `xi-usercenter` → `xi-auth`（用户组权限）→ `xi-webmaster`（站长身份组、管理员资料保护）→ `xi-ban`（封号/禁言/IP）→ `xi-profile`（前台账号设置）→ `xi-oauth`（QQ/微信/微博/GitHub/Gitee/彩虹聚合）→ `xi-author`（作者页）。
 
 **内容与互动**
 `xi-interact`（浏览/点赞/收藏/关注/分享/打赏/面包屑/公告）→ `xi-write`（前台投稿）→ `xi-blocks`（基础区块）→ `xi-blocks-extra`（扩展区块）。
@@ -90,6 +90,20 @@ WordPress
   - `xi_orders_table()` → `{prefix}xi_orders`：在线支付订单（`inc/functions/xi-pay.php`）。
   - `xi_shop_orders_table()` → `{prefix}xi_shop_orders`：商城订单（`inc/functions/shop/shop-order.php`，含运费、金额明细、商家备注，首次访问自动补列）。
 - 购物车 / 收货地址 / 优惠码等轻量数据走 session / user meta / option，不建表。
+
+### 站长身份组（`xi_webmaster`）
+
+- 角色由 `inc/functions/xi-webmaster.php` 维护，开关是主题设置 `webmaster_role_s`（默认关闭）。
+- 能力不写死：`xi_webmaster_caps()` 每次从 `administrator` 角色复制，`init` 时做差异同步，所以插件给管理员新增的能力会自动出现在站长组。
+- 生命周期：开关打开 → `init` 保证角色存在且能力最新；开关关闭 → 该角色成员全部 `add_role('administrator')` + `remove_role('xi_webmaster')`，再删除角色；主题被切换（`switch_theme`）时同样还原，避免主题被移除后留下孤立的高权限角色。
+- 分配方式：后台用户列表/用户编辑页把角色改为「站长」，前后台身份标识（`xi_user_badges()`）会显示金色「站长」徽章（`.xi-role.is-xi_webmaster`）。
+- 注意：WordPress 不允许删除启用中的主题，所以「卸载」在实践上等于切换主题；如果直接删文件绕过 WordPress，`switch_theme` 不会触发，需要手动把成员改回管理员。
+
+### 管理员资料保护
+
+- 开关 `admin_profile_lock_s`（默认关闭），实现是 `map_meta_cap` 过滤器：当 `edit_user` 的操作者与被操作者都属于 `administrator` / `xi_webmaster` 且不是同一人时，追加 `do_not_allow`。
+- 对后台用户编辑、REST API、任何 `current_user_can('edit_user', $id)` 判断都生效；超级管理员（多站点）不受限。
+- 另外在 `user-edit.php` 上做了中文提示守卫，直接访问时给出「操作被拒绝」页面而不是核心的英文提示。
 
 ## 4. 前端契约（JS ↔ PHP）
 

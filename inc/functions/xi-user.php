@@ -12,6 +12,7 @@ function xi_user_role_name($user)
 {
     $names = array(
         'administrator' => __('管理员', 'xi'),
+        'xi_webmaster'  => __('站长', 'xi'),
         'editor'        => __('编辑', 'xi'),
         'author'        => __('作者', 'xi'),
         'contributor'   => __('投稿者', 'xi'),

@@ -1987,6 +1987,41 @@ function xi_csf_admin_options()
         ),
     ));
 
+    /* ---------- 站长身份 ---------- */
+
+    CSF::createSection($prefix, array(
+        'parent' => 'user',
+        'title'  => __('站长身份', 'xi'),
+        'icon'   => 'fa fa-fw fa-shield',
+        'fields' => array(
+            array(
+                'id'      => 'webmaster_role_s',
+                'type'    => 'switcher',
+                'title'   => __('启用「站长」用户组', 'xi'),
+                'desc'    => __('在用户列表新增「站长」角色，拥有与管理员一致的后台权限；关闭开关或切换主题时，所有站长自动恢复为管理员', 'xi'),
+                'default' => false,
+            ),
+            array(
+                'dependency' => array('webmaster_role_s', '!=', ''),
+                'type'       => 'content',
+                'title'      => __('站长成员', 'xi'),
+                'content'    => function_exists('xi_webmaster_status_html') ? xi_webmaster_status_html() : '',
+            ),
+            array(
+                'id'      => 'admin_profile_lock_s',
+                'type'    => 'switcher',
+                'title'   => __('禁止管理员互相修改资料', 'xi'),
+                'desc'    => __('开启后管理员只能修改自己的资料，不能再编辑其他管理员或站长的资料；超级管理员不受限制，普通用户不受影响', 'xi'),
+                'default' => false,
+            ),
+            array(
+                'type'    => 'submessage',
+                'style'   => 'warning',
+                'content' => __('「站长」拥有完整后台权限，请只分配给你信任的人。该角色由主题维护，不要通过其它插件删除，否则下次访问会自动重建。', 'xi'),
+            ),
+        ),
+    ));
+
     CSF::createSection($prefix, array(
         'parent' => 'user',
         'title'  => __('第三方登录', 'xi'),

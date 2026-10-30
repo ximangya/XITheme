@@ -32,6 +32,7 @@
  *    ├─ inc/functions/xi-blocks-extra                  扩展区块 21 个：商品卡片、价格方案、优惠券、购买后可见、步骤、时间轴、视频等
  *    ├─ inc/functions/xi-usercenter                    用户中心与资产 Ajax
  *    ├─ inc/functions/xi-auth                          权限管理（按用户组）
+ *    ├─ inc/functions/xi-webmaster                     站长身份组、禁止管理员互相改资料
  *    ├─ inc/functions/xi-ban                           用户封号 / 禁言、IP 封禁
  *    ├─ inc/functions/xi-translate                     多语言翻译（微软 Edge 免费翻译）
  *    ├─ inc/functions/xi-go                            外链安全跳转
@@ -102,6 +103,7 @@ xi_require(array(
     'inc/functions/xi-blocks-extra',
     'inc/functions/xi-usercenter',
     'inc/functions/xi-auth',
+    'inc/functions/xi-webmaster',
     'inc/functions/xi-ban',
     'inc/functions/xi-translate',
     'inc/functions/xi-go',
