@@ -2,13 +2,13 @@
 
 淡白与青薄荷配色的 WordPress 博客主题，WinUI 3 × 液态玻璃界面，模块化小工具，后台设置基于嵌入式 Codestar Framework（CSF）。
 
-![版本](https://img.shields.io/badge/版本-V1.0-2bb39a) ![WordPress](https://img.shields.io/badge/WordPress-5.6%2B-21759b) ![PHP](https://img.shields.io/badge/PHP-7.0%2B-777bb4) ![许可](https://img.shields.io/badge/许可-GPLv2-blue)
+![版本](https://img.shields.io/badge/版本-V1.1-2bb39a) ![WordPress](https://img.shields.io/badge/WordPress-5.6%2B-21759b) ![PHP](https://img.shields.io/badge/PHP-7.0%2B-777bb4) ![许可](https://img.shields.io/badge/许可-GPLv2-blue)
 
 ![曦主题截图](screenshot.png)
 
 ## 下载
 
-前往 [Releases](https://github.com/ximangya/XITheme/releases) 下载最新版安装包 `xi-V1.0.zip`，在 WordPress 后台「外观 → 主题 → 安装主题 → 上传主题」中上传即可。
+前往 [Releases](https://github.com/ximangya/XITheme/releases) 下载最新版安装包 `xi-V1.1.zip`，在 WordPress 后台「外观 → 主题 → 安装主题 → 上传主题」中上传即可。
 
 > 请下载 Releases 里的安装包，而不是 GitHub 自动生成的「Source code」压缩包：后者的目录名不是 `xi`，直接上传会导致主题名称和路径不一致。
 
@@ -43,6 +43,7 @@
 - 在线支付（易支付、支付宝官方）、余额支付、积分支付
 - 订单：超时关闭、自动确认收货、售后（仅退款 / 退货退款）、商品评价
 - 后台：订单管理、成交统计、导出 CSV、库存预警、商品复制
+- 商城默认关闭；关闭时不注册商品菜单、商城区块、购物车与相关小工具，需要时在「主题设置 → 用户&互动 → 商城系统」开启
 
 **论坛社区**
 - 版块、帖子、话题、发帖、版主管理、置顶、每日发帖上限
@@ -61,7 +62,7 @@
 
 ## 安装与升级
 
-1. 下载 Releases 中的 `xi-V1.0.zip`
+1. 下载 Releases 中的 `xi-V1.1.zip`
 2. 后台「外观 → 主题 → 安装主题 → 上传主题」，上传并启用
 3. 进入后台「曦主题设置」完成基础配置
 

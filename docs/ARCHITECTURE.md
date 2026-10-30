@@ -8,7 +8,7 @@
 WordPress
 └─ functions.php（15 行，只做常量 + 加载）
    ├─ define XI_VERSION  ← style.css 的 Version
-   ├─ define XI_BUILD    ← '2610110'，内部构建号
+   ├─ define XI_BUILD    ← '2610301'，内部构建号
    └─ require inc/inc.php
       ├─ xi_require([...48 个模块...])   ← 顺序 = 依赖顺序，见 inc/inc.php 文件头注释
       └─ do_action('xi_require_end')     ← 主题唯一的加载完成钩子
@@ -118,6 +118,7 @@ WordPress
 - 全部是**动态区块**，`register_block_type('xi/{name}', [...])` + `render_callback`，PHP 侧渲染，无 `block.json`、无 JS 编译。
 - 基础区块（`xi-blocks.php`）：`xi/alert` 提醒框、`xi/heading` 标题、`xi/download` 文件下载（多线路 + 登录门槛）、`xi/quote` 引言、`xi/code` 高亮代码、`xi/button` 按钮、`xi/collapse` 折叠框、`xi/hide` 隐藏内容（登录/积分/VIP/密码/用户组/时间）、`xi/tabs` + `xi/tab` 选项卡。
 - 扩展区块（`xi-blocks-extra.php`，21 个）：商品卡片、价格方案、优惠券、购买后可见、步骤、时间轴、视频等。
+- 商城关闭（`xi_shop_enabled()` 为 false）时，`group=shop` 的 8 个区块不注册，编辑器与前台投稿面板都不会出现；对应短代码仍然注册，渲染返回空内容，旧文章里不会露出裸短代码。
 - 编辑器侧样式在 `assets/css/blocks-editor.css`，前台/编辑器共用 `assets/css/blocks.css`；`main.css` 已移除 `wp-block-library`，核心区块样式由主题自绘。
 - 新增区块：在对应文件的 `$blocks` 数组加一项（属性用 `$str()/$int()/$bool()` 声明）+ 写 `xi_block_render_{name}()` 渲染函数 + 在 `blocks.css` 加样式。区块属性变更会触发「区块验证失败」，改结构时记得写 `deprecated` 或保持属性向后兼容。
 

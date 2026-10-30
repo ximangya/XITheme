@@ -276,6 +276,17 @@ function xi_bx_register()
     wp_register_script('xi-blocks-extra', $uri . '/assets/js/blocks-extra.js', array('xi-blocks-editor', 'wp-blocks', 'wp-element', 'wp-block-editor', 'wp-components', 'wp-server-side-render'), XI_VERSION, true);
 
     foreach (xi_bx_defs() as $name => $def) {
+        // 短代码始终保留：商城关闭后旧文章里的 [xi_product] 等不会变成裸标签，
+        // 渲染时由各区块自行判断商城是否可用并返回空内容。
+        add_shortcode('xi_' . $name, function ($atts, $content = '') use ($name) {
+            return xi_bx_render($name, xi_bx_shortcode_atts($name, $atts), $content === null ? '' : do_shortcode($content));
+        });
+
+        // 商城关闭时不注册商城区块，区块插入器里不再出现商品、价格方案等组件
+        if ('shop' === $def['group'] && !xi_bx_shop_ready()) {
+            continue;
+        }
+
         $attrs = array();
         foreach ($def['fields'] as $key => $f) {
             $default       = isset($f['default']) ? $f['default'] : ($f['type'] === 'toggle' ? false : ($f['type'] === 'number' ? 0 : ''));
@@ -293,9 +304,6 @@ function xi_bx_register()
                 return xi_bx_render($name, $a, $content);
             },
         ));
-        add_shortcode('xi_' . $name, function ($atts, $content = '') use ($name) {
-            return xi_bx_render($name, xi_bx_shortcode_atts($name, $atts), $content === null ? '' : do_shortcode($content));
-        });
     }
 }
 add_action('init', 'xi_bx_register', 11);
@@ -338,6 +346,10 @@ function xi_bx_client_defs()
 {
     $out = array();
     foreach (xi_bx_defs() as $name => $def) {
+        // 商城关闭时，前台投稿面板同样不展示商城组件
+        if ('shop' === $def['group'] && !xi_bx_shop_ready()) {
+            continue;
+        }
         $fields = array();
         foreach ($def['fields'] as $key => $f) {
             $fields[] = array(
