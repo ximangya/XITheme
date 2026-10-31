@@ -102,8 +102,9 @@ WordPress
 ### 管理员资料保护
 
 - 开关 `admin_profile_lock_s`（默认关闭），实现是 `map_meta_cap` 过滤器：当 `edit_user` 的操作者与被操作者都属于 `administrator` / `xi_webmaster` 且不是同一人时，追加 `do_not_allow`。
-- 对后台用户编辑、REST API、任何 `current_user_can('edit_user', $id)` 判断都生效；超级管理员（多站点）不受限。
-- 另外在 `user-edit.php` 上做了中文提示守卫，直接访问时给出「操作被拒绝」页面而不是核心的英文提示。
+- 站长（`xi_webmaster`）不受该限制，可以编辑管理员与其他站长；限制只作用于管理员之间。超级管理员（多站点）同样不受限。
+- 对后台用户编辑、REST API、任何 `current_user_can('edit_user', $id)` 判断都生效。
+- 另外在 `user-edit.php` 上做了中文提示守卫，直接访问时给出「操作被拒绝」页面而不是核心的英文提示（站长同样放行）。
 
 ## 4. 前端契约（JS ↔ PHP）
 

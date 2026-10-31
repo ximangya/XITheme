@@ -53,6 +53,18 @@ function xi_is_admin_account($user_id)
 }
 
 /**
+ * 用户是否为站长
+ */
+function xi_is_webmaster($user_id)
+{
+    $user = get_userdata((int) $user_id);
+    if (!$user || empty($user->roles)) {
+        return false;
+    }
+    return in_array(XI_ROLE_WEBMASTER, (array) $user->roles, true);
+}
+
+/**
  * 站长组的能力：完整复制管理员，插件新增的能力随后自动补上
  * 管理员角色被改名或删除时给一组最小后台权限兜底
  */
@@ -265,6 +277,10 @@ function xi_protect_admin_profiles($caps, $cap, $user_id, $args)
     if (is_multisite() && is_super_admin($user_id)) {
         return $caps;
     }
+    // 站长是站点所有者，可以管理管理员；「互相修改」的限制只作用于管理员之间
+    if (xi_is_webmaster($user_id)) {
+        return $caps;
+    }
 
     $target = (int) $args[0];
     if (!$target || $target === (int) $user_id) {
@@ -288,6 +304,10 @@ function xi_admin_profile_lock_guard()
         return;
     }
     if (is_multisite() && is_super_admin()) {
+        return;
+    }
+    // 站长可以管理管理员，不触发拦截提示
+    if (xi_is_webmaster(get_current_user_id())) {
         return;
     }
 

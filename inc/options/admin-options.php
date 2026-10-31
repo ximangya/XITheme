@@ -2011,7 +2011,7 @@ function xi_csf_admin_options()
                 'id'      => 'admin_profile_lock_s',
                 'type'    => 'switcher',
                 'title'   => __('禁止管理员互相修改资料', 'xi'),
-                'desc'    => __('开启后管理员只能修改自己的资料，不能再编辑其他管理员或站长的资料；超级管理员不受限制，普通用户不受影响', 'xi'),
+                'desc'    => __('开启后管理员只能修改自己的资料，不能再编辑其他管理员或站长的资料；站长与超级管理员不受限制，普通用户不受影响', 'xi'),
                 'default' => false,
             ),
             array(
