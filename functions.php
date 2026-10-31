@@ -10,6 +10,6 @@ if (!defined('ABSPATH')) {
 
 define('XI_VERSION', wp_get_theme(get_template())->get('Version'));
 // 内部版本号：同一大版本内的构建序号，用于资源缓存刷新与问题排查
-define('XI_BUILD', '2610301');
+define('XI_BUILD', '2610311');
 
 require_once get_theme_file_path('inc/inc.php');

@@ -1,4 +1,4 @@
-﻿# 开发环境与流程
+# 开发环境与流程
 
 主题本身零依赖（无 npm、无构建），但建议用本地 WordPress 验证改动。下面这套环境在本机已经跑通。
 
@@ -105,9 +105,9 @@ python build_xi.py
 1. `Get-ChildItem -Recurse -Filter *.php | ForEach-Object { php -l $_.FullName }` 全绿。
 2. 更新 `CHANGELOG.md`（新增一节，写清新增/修复/兼容性）。
 3. 同步版本号：`style.css` 的 `Version:` 与 `functions.php` 的 `XI_BUILD`。
-   - 对外版本 `V1.x`；`XI_BUILD` 是 7 位内部构建号（当前 `2610301`，形如 `年-月-日-序号`），**每次发版必须递增**，它参与资源 URL，用于强制刷新缓存。
+   - 对外版本 `V1.x`；`XI_BUILD` 是 7 位内部构建号（当前 `2610311`，形如 `年-月-日-序号`），**每次发版必须递增**，它参与资源 URL，用于强制刷新缓存。
 4. `python build_xi.py` 出 zip，安装到干净站点冒烟一遍。
-5. 提交并打 tag：`git tag V1.1 && git push origin main --tags`。
+5. 提交并打 tag：`git tag V1.1.1 && git push origin main --tags`。
 
 ## 7. Git 工作流
 
