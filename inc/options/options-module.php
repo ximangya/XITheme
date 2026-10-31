@@ -9,6 +9,25 @@ if (!defined('ABSPATH')) {
 }
 
 /**
+ * 修正 CSF 资源 URL
+ *
+ * 主题目录被符号链接 / Windows Junction 指向真实路径时，CSF 的路径推断会把
+ * 绝对路径拼到主题 URL 后面，导致后台设置页的 CSS / JS 404、所有分组被隐藏。
+ * 这里在 CSF 初始化后统一改回正确的主题内路径。
+ */
+function xi_fix_csf_asset_url()
+{
+    if (!class_exists('CSF') || !property_exists('CSF', 'url')) {
+        return;
+    }
+    $expected = untrailingslashit(get_template_directory_uri()) . '/inc/codestar-framework';
+    if (strpos((string) CSF::$url, $expected) !== 0) {
+        CSF::$url = $expected;
+    }
+}
+xi_fix_csf_asset_url();
+
+/**
  * 幻灯片显示设置默认值
  */
 function xi_slider_defaults()

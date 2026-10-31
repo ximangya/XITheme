@@ -2,21 +2,23 @@
 
 淡白与青薄荷配色的 WordPress 博客主题，WinUI 3 × 液态玻璃界面，模块化小工具，后台设置基于嵌入式 Codestar Framework（CSF）。
 
-![版本](https://img.shields.io/badge/版本-V1.1.2-2bb39a) ![WordPress](https://img.shields.io/badge/WordPress-5.6%2B-21759b) ![PHP](https://img.shields.io/badge/PHP-7.0%2B-777bb4) ![许可](https://img.shields.io/badge/许可-GPLv2-blue)
+![版本](https://img.shields.io/badge/版本-V1.2-2bb39a) ![WordPress](https://img.shields.io/badge/WordPress-5.6%2B-21759b) ![PHP](https://img.shields.io/badge/PHP-7.0%2B-777bb4) ![许可](https://img.shields.io/badge/许可-GPLv2-blue)
 
 ![曦主题截图](screenshot.png)
 
 ## 下载
 
-前往 [Releases](https://github.com/ximangya/XITheme/releases) 下载最新版安装包 `xi-V1.1.2.zip`，在 WordPress 后台「外观 → 主题 → 安装主题 → 上传主题」中上传即可。
+前往 [Releases](https://github.com/ximangya/XITheme/releases) 下载最新版安装包 `xi-V1.2.zip`，在 WordPress 后台「外观 → 主题 → 安装主题 → 上传主题」中上传即可。
 
 > 请下载 Releases 里的安装包，而不是 GitHub 自动生成的「Source code」压缩包：后者的目录名不是 `xi`，直接上传会导致主题名称和路径不一致。
 
-## V1.1.2 更新
+## V1.2 更新
 
+- 修复 Junction / 符号链接部署时主题设置页空白、设置分组不显示的问题
+- 前台编辑器下拉改为自定义玻璃菜单，深色模式不再出现系统白底菜单
+- 修复编辑器描述截断产生的「、…」「，…」等标点问题，统一中文标点写法
 - 商城改为发卡网模式：只售线上卡密、软件与下载内容，付款后自动发放
-- 移除实物、运费、收货地址、物流与售后流程；卡密不足时进入「待补卡」，后台可补发
-- 后台订单、用户中心、商品编辑与导出同步精简
+- 头像默认切换 WeAvatar，评论头像懒加载、去掉多余 2x 请求，图片统一异步解码
 - 完整变更见 [CHANGELOG.md](CHANGELOG.md)
 
 ## V1.1.1 更新
@@ -82,7 +84,7 @@
 
 ## 安装与升级
 
-1. 下载 Releases 中的 `xi-V1.1.2.zip`
+1. 下载 Releases 中的 `xi-V1.2.zip`
 2. 后台「外观 → 主题 → 安装主题 → 上传主题」，上传并启用
 3. 进入后台「曦主题设置」完成基础配置
 
