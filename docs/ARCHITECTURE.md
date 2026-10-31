@@ -8,7 +8,7 @@
 WordPress
 └─ functions.php（15 行，只做常量 + 加载）
    ├─ define XI_VERSION  ← style.css 的 Version
-   ├─ define XI_BUILD    ← '3000'，内部构建号（每次小修改 +5）
+   ├─ define XI_BUILD    ← '3005'，内部构建号（每次小修改 +5）
    └─ require inc/inc.php
       ├─ xi_require([...48 个模块...])   ← 顺序 = 依赖顺序，见 inc/inc.php 文件头注释
       └─ do_action('xi_require_end')     ← 主题唯一的加载完成钩子

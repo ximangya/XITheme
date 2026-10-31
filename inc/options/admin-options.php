@@ -356,8 +356,8 @@ function xi_csf_admin_options()
                 'id'      => 'avatar_source',
                 'type'    => 'button_set',
                 'title'   => __('头像来源', 'xi'),
-                'desc'    => __('没有上传头像的用户使用的头像服务。国内站点推荐 Cravatar 或 WeAvatar；选择「本地默认」则不请求任何外部服务，全部显示默认头像。用户上传的头像、第三方登录头像始终优先', 'xi'),
-                'default' => 'cravatar',
+                'desc'    => __('没有上传头像的用户使用的头像服务。国内推荐 WeAvatar（速度较快）；Cravatar 在部分网络下握手较慢，Gravatar 需要代理。选择「本地默认」则不请求任何外部服务。用户上传的头像、第三方登录头像始终优先', 'xi'),
+                'default' => 'weavatar',
                 'options' => array(
                     'cravatar' => 'Cravatar',
                     'weavatar' => 'WeAvatar',

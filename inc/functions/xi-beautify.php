@@ -271,6 +271,25 @@ function xi_post_hero_on()
     return $on;
 }
 
+/**
+ * 头图使用特色图片时提前预加载，避免首屏背景图晚到导致 LCP 变慢
+ */
+function xi_post_hero_preload()
+{
+    if (!xi_post_hero_on() || _xz('post_hero_bg', 'color') !== 'thumb') {
+        return;
+    }
+    $post_id = get_queried_object_id();
+    if (!$post_id || !has_post_thumbnail($post_id)) {
+        return;
+    }
+    $url = get_the_post_thumbnail_url($post_id, 'large');
+    if ($url) {
+        echo '<link rel="preload" as="image" href="' . esc_url($url) . '" fetchpriority="high">' . "\n";
+    }
+}
+add_action('wp_head', 'xi_post_hero_preload', 2);
+
 function xi_post_hero()
 {
     if (!xi_post_hero_on()) {
@@ -289,7 +308,7 @@ function xi_post_hero()
         }
     }
     if (_xz('post_hero_bg', 'color') === 'thumb' && has_post_thumbnail($post_id)) {
-        $style .= '--hero-img:url(' . esc_url(get_the_post_thumbnail_url($post_id, 'full')) . ');';
+        $style .= '--hero-img:url(' . esc_url(get_the_post_thumbnail_url($post_id, 'large')) . ');';
         $class .= ' has-image';
     }
     if (_xz('post_hero_anim', true)) {

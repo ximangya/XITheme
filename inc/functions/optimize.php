@@ -146,3 +146,15 @@ function xi_admin_bar_options_link($wp_admin_bar)
     ));
 }
 add_action('admin_bar_menu', 'xi_admin_bar_options_link', 99);
+
+/**
+ * 图片解码异步：附件图片统一补 decoding="async"，避免长图解码阻塞首屏
+ */
+function xi_image_decoding_async($attr)
+{
+    if (empty($attr['decoding'])) {
+        $attr['decoding'] = 'async';
+    }
+    return $attr;
+}
+add_filter('wp_get_attachment_image_attributes', 'xi_image_decoding_async', 10, 3);

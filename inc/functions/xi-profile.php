@@ -61,12 +61,50 @@ function xi_avatar_user_id($id_or_email)
  */
 function xi_avatar_source()
 {
+    static $migrated = null;
     $source = _xz('avatar_source', '');
+    // 旧版默认 Cravatar：部分网络下 TLS 握手很慢，首次升级自动切到 WeAvatar；之后仍可在设置里改回
+    if ($migrated === null) {
+        if ($source === 'cravatar' && !get_option('xi_avatar_source_migrated')) {
+            _sxz('avatar_source', 'weavatar');
+            update_option('xi_avatar_source_migrated', 1);
+            $migrated = true;
+        } else {
+            $migrated = false;
+        }
+    }
+    if ($migrated) {
+        $source = 'weavatar';
+    }
     if (!in_array($source, array('cravatar', 'weavatar', 'gravatar', 'local'), true)) {
-        $source = _xz('gravatar_cn_s', true) ? 'cravatar' : 'gravatar';
+        $source = 'weavatar';
     }
     return $source;
 }
+
+/**
+ * 头像域名预连接：省掉首个头像的 DNS / TLS 握手时间
+ */
+function xi_avatar_preconnect()
+{
+    if (!get_option('show_avatars')) {
+        return;
+    }
+    $hosts = array(
+        'weavatar' => 'https://weavatar.com',
+        'cravatar' => 'https://cravatar.cn',
+        'gravatar' => 'https://secure.gravatar.com',
+    );
+    $source = xi_avatar_source();
+    if (empty($hosts[$source])) {
+        return;
+    }
+    $url  = $hosts[$source];
+    $host = wp_parse_url($url, PHP_URL_HOST);
+    echo '<link rel="preconnect" href="' . esc_url($url) . '">' . "\n";
+    echo '<link rel="dns-prefetch" href="//' . esc_attr($host) . '">' . "\n";
+}
+add_action('wp_head', 'xi_avatar_preconnect', 1);
 
 /**
  * 默认头像：后台上传的图片，未设置时用主题自带的图形
@@ -197,6 +235,37 @@ function xi_avatar_fallback_script()
 {
     echo '<script>document.addEventListener("error",function(e){var t=e.target;if(t.tagName==="IMG"&&/(^|\s)avatar(\s|$)/.test(t.className)&&!t.dataset.xiFallback){t.dataset.xiFallback=1;t.removeAttribute("srcset");t.src=' . wp_json_encode(xi_default_avatar_url()) . ';}},true);</script>' . "\n";
 }
+
+/**
+ * 头像 <img> 优化：
+ * - 40/44px 的列表、评论头像去掉 2x srcset，少一半图片请求
+ * - 评论区头像补 loading="lazy"，不阻塞首屏
+ * - 所有头像补 decoding="async"，解码不阻塞渲染
+ */
+function xi_avatar_img_optimize($avatar, $id_or_email, $size, $default, $alt, $args)
+{
+    if (!$avatar || !is_string($avatar)) {
+        return $avatar;
+    }
+    if (in_array((int) $size, array(40, 44), true)) {
+        $avatar = preg_replace('/\s+srcset=([\'"]).*?\1/i', '', $avatar);
+        if (strpos($avatar, 'loading=') === false) {
+            $avatar = str_replace('<img ', '<img loading="lazy" ', $avatar);
+        }
+    }
+    // 右上角 32px 头像在首屏，改为立即加载，避免导航栏头像晚出现
+    if ((int) $size === 32) {
+        $avatar = preg_replace('/\s+loading=([\'"])(?:lazy|auto)\1/i', ' loading="eager"', $avatar);
+        if (strpos($avatar, 'fetchpriority=') === false) {
+            $avatar = str_replace('<img ', '<img fetchpriority="high" ', $avatar);
+        }
+    }
+    if (strpos($avatar, 'decoding=') === false) {
+        $avatar = str_replace('<img ', '<img decoding="async" ', $avatar);
+    }
+    return $avatar;
+}
+add_filter('get_avatar', 'xi_avatar_img_optimize', 10, 6);
 add_action('wp_head', 'xi_avatar_fallback_script', 2);
 
 /* ---------- Ajax ---------- */

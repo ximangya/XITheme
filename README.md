@@ -70,7 +70,7 @@
 
 **性能与 SEO**
 - 查询缓存（支持 Redis / Memcached 对象缓存）、精简 WordPress 前台
-- SEO 标签、FAQ 结构化数据、头像镜像（Cravatar / WeAvatar）
+- SEO 标签、FAQ 结构化数据、头像镜像（默认 WeAvatar，可切 Cravatar / Gravatar / 本地）
 
 ## 环境要求
 

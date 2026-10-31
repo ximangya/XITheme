@@ -49,7 +49,7 @@ while (have_posts()) :
             <div class="xi-product-gallery" data-xi-gallery>
                 <div class="xi-product-stage">
                     <?php if ($gallery) : ?>
-                        <?php echo wp_get_attachment_image($gallery[0], 'large', false, array('data-xi-gallery-main' => '', 'alt' => esc_attr(get_the_title()))); ?>
+                        <?php echo wp_get_attachment_image($gallery[0], 'large', false, array('data-xi-gallery-main' => '', 'alt' => esc_attr(get_the_title()), 'loading' => 'eager', 'fetchpriority' => 'high', 'decoding' => 'async')); ?>
                     <?php else : ?>
                         <span class="xi-shop-thumb-empty"><?php echo xi_icon('bag'); ?></span>
                     <?php endif; ?>
@@ -58,7 +58,7 @@ while (have_posts()) :
                 <?php if (count($gallery) > 1) : ?>
                     <div class="xi-product-thumbs">
                         <?php foreach ($gallery as $i => $img_id) : ?>
-                            <button type="button" class="<?php echo $i === 0 ? 'is-active' : ''; ?>" data-src="<?php echo esc_url(wp_get_attachment_image_url($img_id, 'large')); ?>" aria-label="<?php echo esc_attr(sprintf(__('第 %d 张图', 'xi'), $i + 1)); ?>"><?php echo wp_get_attachment_image($img_id, 'thumbnail'); ?></button>
+                            <button type="button" class="<?php echo $i === 0 ? 'is-active' : ''; ?>" data-src="<?php echo esc_url(wp_get_attachment_image_url($img_id, 'large')); ?>" aria-label="<?php echo esc_attr(sprintf(__('第 %d 张图', 'xi'), $i + 1)); ?>"><?php echo wp_get_attachment_image($img_id, 'thumbnail', false, array('loading' => 'lazy', 'decoding' => 'async')); ?></button>
                         <?php endforeach; ?>
                     </div>
                 <?php endif; ?>
