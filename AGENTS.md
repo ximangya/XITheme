@@ -4,7 +4,7 @@ WordPress 主题，视觉语言是 **WinUI 3（Fluent）× 液态玻璃**。本�
 
 ## 一句话现状
 
-- 主题版本 `V1.1.1`，内部构建号 `2610311`（`functions.php` 的 `XI_BUILD`，`style.css` 的 `Version`）。
+- 主题版本 `V1.1.2`，内部构建号 `3000`（`functions.php` 的 `XI_BUILD`，`style.css` 的 `Version`）。**版本规则：每次小修改 XI_BUILD +5**（3000 → 3005 → 3010…），发版时同步更新。
 - 149 个 PHP 文件、约 3.3 万行；无 npm / 无构建步骤，PHP + CSS + 原生 JS 直接运行。
 - 功能范围：博客、前台投稿 / 编辑器（30 个区块）、用户体系（登录 / 积分 / VIP / 卡密）、发卡网商城（卡密 / 软件，自动发放）、论坛、第三方登录、AI 摘要、站点美化。
 - Git：`origin` = <https://github.com/ximangya/XITheme.git>，`main` 已包含上游全部历史 + 本地基线提交。
@@ -64,7 +64,7 @@ xi/
 9. **输出转义**：`esc_html()` / `esc_attr()` / `esc_url()` / `wp_kses_post()`；后端权限用 `current_user_can()`，Ajax 一律 `check_ajax_referer(..., false)` 后返回 `wp_send_json_*`。
 10. **文件必须是 UTF-8**（无 BOM）；注释和 UI 文案用中文，i18n 用 `__('…', 'xi')`。
 11. **不要动** `inc/codestar-framework/`（第三方）与 `inc/codestar-framework/samples/`（已 gitignore，也不打包）。
-12. **发布前**：PHP lint 全绿 → `CHANGELOG.md` 加一节 → `style.css` 的 `Version` 与 `functions.php` 的 `XI_BUILD` 同步 → `python build_xi.py` 出包。
+12. **发布前**：PHP lint 全绿 → `CHANGELOG.md` 加一节 → `style.css` 的 `Version` 与 `functions.php` 的 `XI_BUILD` 同步（每次小修改 +5）→ `python build_xi.py` 出包。
 
 ## 设计系统速查
 
