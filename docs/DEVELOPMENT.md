@@ -105,7 +105,7 @@ python build_xi.py
 1. `Get-ChildItem -Recurse -Filter *.php | ForEach-Object { php -l $_.FullName }` 全绿。
 2. 更新 `CHANGELOG.md`（新增一节，写清新增/修复/兼容性）。
 3. 同步版本号：`style.css` 的 `Version:` 与 `functions.php` 的 `XI_BUILD`。
-   - 对外版本 `V1.x`；`XI_BUILD` 是内部构建号（当前 `3005`），**每次小修改 +5**（3000 → 3005 → 3010…），它参与资源 URL，用于强制刷新缓存。
+   - 对外版本 `V1.x`；`XI_BUILD` 是内部构建号（当前 `3010`），**每次小修改 +5**（3000 → 3005 → 3010…），它参与资源 URL，用于强制刷新缓存。
 4. `python build_xi.py` 出 zip，安装到干净站点冒烟一遍。
 5. 提交并打 tag：`git tag V1.1.2 && git push origin main --tags`。
 

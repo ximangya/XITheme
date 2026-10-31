@@ -70,7 +70,7 @@ function xi_bx_defs()
             'group'  => 'shop',
             'desc'   => __('多个套餐并排对比，适合会员、服务报价', 'xi'),
             'fields' => array(
-                'plans' => array('type' => 'lines', 'label' => __('方案', 'xi'), 'help' => __('每行一个方案：名称|价格|特性（用 ; 分隔）|按钮链接|推荐（填 1 高亮）', 'xi'), 'default' => "基础版|¥29|1 个站点;一年更新|https://|\n专业版|¥99|5 个站点;终身更新;优先支持|https://|1\n企业版|¥299|不限站点;终身更新;一对一支持|https://|"),
+                'plans' => array('type' => 'lines', 'label' => __('方案', 'xi'), 'help' => __('每行一个方案：名称|价格|特性（多个特性用英文分号分隔）|按钮链接|推荐（填 1 高亮）', 'xi'), 'default' => "基础版|¥29|1 个站点;一年更新|https://|\n专业版|¥99|5 个站点;终身更新;优先支持|https://|1\n企业版|¥299|不限站点;终身更新;一对一支持|https://|"),
                 'btn'   => array('type' => 'text', 'label' => __('按钮文字', 'xi'), 'default' => __('选择方案', 'xi')),
             ),
         ),
@@ -80,7 +80,7 @@ function xi_bx_defs()
             'group'  => 'shop',
             'desc'   => __('票券样式的优惠码，点击复制', 'xi'),
             'fields' => array(
-                'amount' => array('type' => 'text', 'label' => __('面额', 'xi'), 'default' => '¥10', 'placeholder' => '¥10 / 8.5折'),
+                'amount' => array('type' => 'text', 'label' => __('面额', 'xi'), 'default' => '¥10', 'placeholder' => '¥10 或 8.5折'),
                 'title'  => array('type' => 'text', 'label' => __('标题', 'xi'), 'default' => __('新人专享券', 'xi')),
                 'code'   => array('type' => 'text', 'label' => __('优惠码', 'xi'), 'default' => 'NEW10'),
                 'desc'   => array('type' => 'text', 'label' => __('使用条件', 'xi'), 'default' => __('满 50 元可用', 'xi')),
@@ -122,12 +122,12 @@ function xi_bx_defs()
             'title'  => __('链接卡片', 'xi'),
             'icon'   => 'admin-links',
             'group'  => 'content',
-            'desc'   => __('网站 / 资源推荐卡片：标题、简介、图标', 'xi'),
+            'desc'   => __('网站/资源推荐卡片：标题、简介、图标', 'xi'),
             'fields' => array(
                 'url'   => array('type' => 'url', 'label' => __('链接', 'xi')),
                 'title' => array('type' => 'text', 'label' => __('标题', 'xi')),
                 'desc'  => array('type' => 'text', 'label' => __('简介', 'xi')),
-                'image' => array('type' => 'image', 'label' => __('图标 / 图片地址', 'xi'), 'help' => __('留空自动使用网站图标', 'xi')),
+                'image' => array('type' => 'image', 'label' => __('图标/图片地址', 'xi'), 'help' => __('留空自动使用网站图标', 'xi')),
                 'blank' => array('type' => 'toggle', 'label' => __('新窗口打开', 'xi'), 'default' => true),
             ),
         ),
@@ -172,7 +172,7 @@ function xi_bx_defs()
             'title'  => __('倒计时', 'xi'),
             'icon'   => 'clock',
             'group'  => 'content',
-            'desc'   => __('活动开始 / 结束倒计时', 'xi'),
+            'desc'   => __('活动开始/结束倒计时', 'xi'),
             'fields' => array(
                 'title' => array('type' => 'text', 'label' => __('标题', 'xi'), 'default' => __('距离活动结束还有', 'xi')),
                 'time'  => array('type' => 'datetime', 'label' => __('目标时间', 'xi')),
@@ -216,7 +216,7 @@ function xi_bx_defs()
             'title'  => __('清单', 'xi'),
             'icon'   => 'yes-alt',
             'group'  => 'content',
-            'desc'   => __('待办 / 检查清单，行首写 x 表示已完成', 'xi'),
+            'desc'   => __('待办/检查清单，行首写 x 表示已完成', 'xi'),
             'fields' => array(
                 'title' => array('type' => 'text', 'label' => __('标题', 'xi')),
                 'items' => array('type' => 'lines', 'label' => __('条目', 'xi'), 'help' => __('每行一项，以「x 」开头表示已完成', 'xi'), 'default' => "x 备份网站\nx 上传新版本\n检查前台页面"),
@@ -380,7 +380,7 @@ function xi_bx_client_defs()
  */
 function xi_bx_choices()
 {
-    $products = array('0' => __('— 选择商品 —', 'xi'));
+    $products = array('0' => __('请选择商品', 'xi'));
     $cats     = array('0' => __('全部分类', 'xi'));
     if (function_exists('xi_shop_enabled') && xi_shop_enabled() && post_type_exists('xi_product')) {
         foreach (get_posts(array('post_type' => 'xi_product', 'numberposts' => 200, 'post_status' => 'publish', 'orderby' => 'date')) as $p) {

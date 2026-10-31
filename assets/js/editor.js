@@ -39,6 +39,13 @@
     });
   };
 
+  // 截断时去掉末尾标点，避免出现「、…」「，…」这种悬空标点
+  var ellipsis = function (text, len) {
+    text = String(text || '');
+    if (text.length <= len) return text;
+    return text.slice(0, len).replace(/[，。、；：！？,.;:!?]+$/, '') + '…';
+  };
+
   /* ---------- 选区 ---------- */
 
   var inEditor = function (node) { return node && (node === editor || editor.contains(node)); };
@@ -162,6 +169,135 @@
     flyout.classList.remove('is-panel');
   };
 
+  /* ---------- 自定义下拉：统一深色 / 玻璃风格，避免系统原生白底菜单 ---------- */
+  var closeAllSelects = function (except) {
+    Array.prototype.forEach.call(document.querySelectorAll('.xi-select.is-open'), function (wrap) {
+      if (wrap === except) return;
+      var menu = wrap.querySelector('.xi-select-menu');
+      var btn = wrap.querySelector('.xi-select-btn');
+      if (menu) menu.hidden = true;
+      wrap.classList.remove('is-open');
+      if (btn) btn.setAttribute('aria-expanded', 'false');
+    });
+  };
+
+  var enhanceSelects = function (container) {
+    Array.prototype.forEach.call(container.querySelectorAll('select'), function (sel) {
+      if (sel.parentNode && sel.parentNode.classList && sel.parentNode.classList.contains('xi-select')) return;
+
+      var wrap = document.createElement('span');
+      wrap.className = 'xi-select';
+      sel.parentNode.insertBefore(wrap, sel);
+      wrap.appendChild(sel);
+
+      var btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'xi-select-btn';
+      btn.setAttribute('aria-haspopup', 'listbox');
+      btn.setAttribute('aria-expanded', 'false');
+      btn.disabled = sel.disabled;
+      btn.innerHTML = '<span class="xi-select-label"></span><svg class="xi-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m7 10 5 5 5-5"/></svg>';
+
+      var menu = document.createElement('div');
+      menu.className = 'xi-select-menu';
+      menu.hidden = true;
+      menu.setAttribute('role', 'listbox');
+
+      wrap.appendChild(btn);
+      wrap.appendChild(menu);
+
+      wrap.addEventListener('focusout', function () {
+        setTimeout(function () {
+          if (!wrap.contains(document.activeElement)) close();
+        }, 0);
+      });
+      var items = [];
+      Array.prototype.forEach.call(sel.options, function (o, i) {
+        var item = document.createElement('button');
+        item.type = 'button';
+        item.className = 'xi-select-option';
+        item.setAttribute('role', 'option');
+        item.setAttribute('data-value', o.value);
+        item.textContent = o.text;
+        item.disabled = o.disabled;
+        item.addEventListener('click', function (e) {
+          e.preventDefault();
+          e.stopPropagation();
+          sel.selectedIndex = i;
+          sel.dispatchEvent(new Event('change', { bubbles: true }));
+          sync();
+          close();
+          btn.focus();
+        });
+        menu.appendChild(item);
+        items.push(item);
+      });
+
+      var label = btn.querySelector('.xi-select-label');
+      var sync = function () {
+        var o = sel.options[sel.selectedIndex] || sel.options[0];
+        label.textContent = o ? o.text : '';
+        items.forEach(function (item, i) {
+          var on = i === sel.selectedIndex;
+          item.classList.toggle('is-selected', on);
+          item.setAttribute('aria-selected', on ? 'true' : 'false');
+        });
+      };
+      var close = function () {
+        menu.hidden = true;
+        wrap.classList.remove('is-open');
+        btn.setAttribute('aria-expanded', 'false');
+      };
+      var open = function () {
+        closeAllSelects(wrap);
+        var r = btn.getBoundingClientRect();
+        var form = btn.closest('.xi-flyout-form');
+        var fr = form ? form.getBoundingClientRect() : null;
+        var up = fr ? (fr.bottom - r.bottom < 240 && r.top - fr.top > 240) : (window.innerHeight - r.bottom < 240 && r.top > 240);
+        menu.classList.toggle('is-up', up);
+        menu.hidden = false;
+        wrap.classList.add('is-open');
+        btn.setAttribute('aria-expanded', 'true');
+        var active = items[sel.selectedIndex] || items[0];
+        if (active) active.focus();
+      };
+
+      btn.addEventListener('click', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        if (menu.hidden) open(); else close();
+      });
+      btn.addEventListener('keydown', function (e) {
+        if (e.key === 'ArrowDown' || e.key === 'ArrowUp' || e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          if (menu.hidden) open();
+        } else if (e.key === 'Escape') {
+          close();
+        }
+      });
+      menu.addEventListener('keydown', function (e) {
+        var idx = items.indexOf(document.activeElement);
+        if (e.key === 'ArrowDown') {
+          e.preventDefault();
+          (items[idx + 1] || items[0]).focus();
+        } else if (e.key === 'ArrowUp') {
+          e.preventDefault();
+          (items[idx - 1] || items[items.length - 1]).focus();
+        } else if (e.key === 'Escape') {
+          e.preventDefault();
+          close();
+          btn.focus();
+        }
+      });
+      sel.addEventListener('change', sync);
+      sync();
+    });
+  };
+
+  document.addEventListener('mousedown', function (e) {
+    if (!e.target.closest('.xi-select')) closeAllSelects();
+  });
+
   var openFlyout = function (anchor, html, onSubmit) {
     flyout.classList.remove('is-panel');
     flyout.innerHTML = '<form class="xi-flyout-form" novalidate>' + html + '<div class="xi-flyout-actions"><button type="button" class="xi-btn xi-btn-sm" data-flyout-cancel>取消</button><button type="submit" class="xi-btn xi-btn-sm xi-btn-accent">确定</button></div></form>';
@@ -173,7 +309,8 @@
     if (top + flyout.offsetHeight > window.innerHeight - 12) top = Math.max(12, rect.top - flyout.offsetHeight - 8);
     flyout.style.top = top + 'px';
     var f = flyout.querySelector('form');
-    var first = f.querySelector('input, select');
+    enhanceSelects(f);
+    var first = f.querySelector('input, .xi-select-btn');
     if (first) first.focus();
     f.addEventListener('submit', function (e) {
       e.preventDefault();
@@ -310,7 +447,7 @@
     if (d.group === 'shop' && !BX.shop) return;
     BX_DEFS[d.name] = d;
     I['bx:' + d.name] = BX_ICONS[d.group] || BX_ICONS.content;
-    ITEMS.push({ key: 'bx:' + d.name, name: d.title, desc: d.desc.length > 14 ? d.desc.slice(0, 14) + '…' : d.desc });
+    ITEMS.push({ key: 'bx:' + d.name, name: d.title, desc: ellipsis(d.desc, 14) });
   });
 
   var panelAnchor = null;
@@ -464,7 +601,7 @@
       var text = selectedText();
       openFlyout(anchorRect(),
         '<label>样式<select name="style">' + opt({ 'default': '大引号', card: '卡片', center: '居中' }, 'default') + '</select></label>' +
-        '<label>出处 / 作者<input type="text" name="cite" placeholder="可留空"></label>',
+        '<label>出处/作者<input type="text" name="cite" placeholder="可留空"></label>',
         function (f) {
           var cite = f.cite.value.trim();
           insertBlock('<blockquote class="xi-quote is-' + esc(f.style.value) + '"><p>' + esc(text || '在这里输入引言') + '</p>' + (cite ? '<cite>' + esc(cite) + '</cite>' : '') + '</blockquote>', text ? null : 'p');
@@ -530,7 +667,7 @@
     var text = pre ? '' : selectedText();
     openFlyout(pre ? pre : anchorRect(),
       '<label>语言<select name="lang">' + opt(LANGS, lang) + '</select></label>' +
-      '<label>文件名 / 标题<input type="text" name="title" value="' + esc(title) + '" placeholder="可留空，例如 index.php"></label>' +
+      '<label>文件名/标题<input type="text" name="title" value="' + esc(title) + '" placeholder="可留空，例如 index.php"></label>' +
       (pre ? '' : '<label>代码<textarea name="code" rows="6" spellcheck="false" placeholder="粘贴代码，也可插入后再输入">' + esc(text) + '</textarea></label>'),
       function (f) {
         var l = f.lang.value;
@@ -666,7 +803,7 @@
       }
       if (f.type === 'select') continue;
       var s = String(v).split(/\n/)[0];
-      return f.label + '：' + (s.length > 30 ? s.slice(0, 30) + '…' : s);
+      return f.label + '：' + ellipsis(s, 30);
     }
     return def.desc;
   };

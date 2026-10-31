@@ -32,7 +32,7 @@
         } ?>
     </div>
     <div class="xi-tb-group">
-        <button type="button" class="xi-tb-btn xi-tb-insert" data-cmd="insert" title="<?php esc_attr_e('插入引言、代码、提醒框等（空行输入 / 也可打开）', 'xi'); ?>" aria-haspopup="true"><?php echo xi_icon('plus'); ?><span><?php esc_html_e('插入', 'xi'); ?></span></button>
+        <button type="button" class="xi-tb-btn xi-tb-insert" data-cmd="insert" title="<?php esc_attr_e('插入引言、代码、提醒框等（空行输入或点击打开）', 'xi'); ?>" aria-haspopup="true"><?php echo xi_icon('plus'); ?><span><?php esc_html_e('插入', 'xi'); ?></span></button>
     </div>
     <div class="xi-tb-group is-end">
         <?php echo xi_writer_btn('removeFormat', 'eraser', __('清除格式', 'xi')); ?>
