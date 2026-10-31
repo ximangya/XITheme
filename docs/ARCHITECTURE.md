@@ -45,8 +45,8 @@ WordPress
 **内容与互动**
 `xi-interact`（浏览/点赞/收藏/关注/分享/打赏/面包屑/公告）→ `xi-write`（前台投稿）→ `xi-blocks`（基础区块）→ `xi-blocks-extra`（扩展区块）。
 
-**商城**
-`shop/shop-core`（`xi_product` CPT、`product_cat`/`product_tag`、价格库存路由）→ `shop-pricing`（满减、优惠码、积分抵扣、运费）→ `shop-order`（订单表与状态机）→ `shop-cart`（购物车、地址、评价）→ `shop-uc`（用户中心订单）→ `shop-admin`（后台商品/订单/统计/导出）→ `shop-widget`。
+**商城（发卡网模式）**
+`shop/shop-core`（`xi_product` CPT、`product_cat`/`product_tag`、卡密库存与价格）→ `shop-pricing`（满减、优惠码、积分抵扣）→ `shop-order`（订单表；付款后自动发卡 / 自动发放下载内容）→ `shop-cart`（购物车、优惠码、评价）→ `shop-uc`（用户中心订单）→ `shop-admin`（后台商品 / 订单 / 统计 / 导出）→ `shop-widget`。实物、运费、收货地址、物流与售后流程已从界面移除，仅保留兼容函数。
 
 **论坛**
 `xi-bbs`（`forum_post` CPT、`plate`/`forum_topic` 分类、发帖、版主）。
@@ -88,8 +88,8 @@ WordPress
 - 分类法：`product_cat` / `product_tag`（商品）、`plate`（版块）/ `forum_topic`（话题）（论坛）。
 - 自建表（`dbDelta` 升级，升级逻辑挂在 `admin_init`）：
   - `xi_orders_table()` → `{prefix}xi_orders`：在线支付订单（`inc/functions/xi-pay.php`）。
-  - `xi_shop_orders_table()` → `{prefix}xi_shop_orders`：商城订单（`inc/functions/shop/shop-order.php`，含运费、金额明细、商家备注，首次访问自动补列）。
-- 购物车 / 收货地址 / 优惠码等轻量数据走 session / user meta / option，不建表。
+  - `xi_shop_orders_table()` → `{prefix}xi_shop_orders`：商城订单（`inc/functions/shop/shop-order.php`，含金额明细、卡密交付内容、商家备注，首次访问自动补列）。
+- 购物车 / 优惠码等轻量数据走 session / user meta / option，不建表；收货地址字段仅保留兼容，发卡网模式不再使用。
 
 ### 站长身份组（`xi_webmaster`）
 
@@ -144,6 +144,6 @@ WordPress
 ## 8. 扩展点
 
 - 加载完成：`do_action('xi_require_end')`（子主题或插件在此追加模块）。
-- 支付成功：`xi_pay.php` / `shop-order.php` 内有订单状态流转钩子（`xi_order_paid` 一类），接第三方发货/通知优先挂这里，不要改支付回调本身。
+- 支付成功：`xi_pay.php` / `shop-order.php` 内有订单状态流转钩子（`xi_order_paid` 一类），接第三方发卡/通知优先挂这里，不要改支付回调本身。
 - 模板覆盖：所有模板与 `template-parts/` 都可用子主题同名文件覆盖；优先用 filter（如 `xi_body_class`、`the_content` 优先级）而不是改核心文件。
 - 样式覆盖：子主题 `style.css` 里重写 CSS 变量即可换肤，不必覆盖 `main.css`。

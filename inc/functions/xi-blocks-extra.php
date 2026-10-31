@@ -237,7 +237,7 @@ function xi_bx_defs()
             'group'  => 'content',
             'desc'   => __('问答列表，自动输出 FAQ 结构化数据，有利于搜索引擎展示', 'xi'),
             'fields' => array(
-                'items' => array('type' => 'lines', 'label' => __('问答', 'xi'), 'help' => __('每行一组：问题|答案', 'xi'), 'default' => "支持退款吗？|虚拟商品付款后 7 天内可申请售后\n可以用在多少个站点？|按购买的方案授权"),
+                'items' => array('type' => 'lines', 'label' => __('问答', 'xi'), 'help' => __('每行一组：问题|答案', 'xi'), 'default' => "支持退款吗？|线上卡密与软件售出后不支持退款，请在购买前确认\n可以用在多少个站点？|按购买的方案授权"),
             ),
         ),
         'author'     => array(

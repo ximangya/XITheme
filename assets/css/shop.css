@@ -41,6 +41,9 @@
 .xi-shop-soldout { position: absolute; inset: 0; display: grid; place-items: center; background: rgba(0, 0, 0, .45); color: #fff; font-size: 16px; font-style: normal; font-weight: 600; }
 .xi-shop-card-body { display: flex; flex-direction: column; gap: 10px; flex: 1; padding: 12px 14px 14px; }
 .xi-shop-card-title { display: -webkit-box; overflow: hidden; font-size: 15px; font-weight: 600; line-height: 1.45; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+.xi-shop-card-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+.xi-shop-card-tags em { padding: 3px 7px; border-radius: 6px; background: var(--xi-main-soft); color: var(--xi-main-deep); font-size: 11px; font-style: normal; line-height: 1.4; }
+.xi-shop-card-tags em.is-stock { background: var(--xi-subtle-2); color: var(--xi-text-2); }
 .xi-shop-card-foot { display: flex; align-items: flex-end; justify-content: space-between; gap: 8px; margin-top: auto; }
 .xi-shop-card-price { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px; }
 .xi-shop-card-price > small { color: var(--xi-text-3); font-size: 12px; }

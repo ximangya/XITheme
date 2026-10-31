@@ -480,6 +480,10 @@ function xi_ajax_shop_order_action()
     $user_id = xi_shop_ajax_check();
     $order   = xi_shop_ajax_order($user_id);
     $do      = isset($_POST['do']) ? sanitize_key($_POST['do']) : '';
+    // 发卡网模式：没有收货与售后流程，阻止通过接口提交这些操作
+    if (xi_shop_digital_only() && in_array($do, array('confirm', 'refund', 'refund_cancel', 'return_ship'), true)) {
+        xi_shop_json(false, __('发卡网模式下无需确认收货，也不支持售后', 'xi'));
+    }
     switch ($do) {
         case 'cancel':
             $ok = xi_shop_order_close($order->order_no, __('用户取消', 'xi'));

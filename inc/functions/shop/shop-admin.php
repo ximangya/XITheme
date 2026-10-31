@@ -78,7 +78,6 @@ function xi_product_meta_box_html($post)
         </div>
         <div>
             <label><input type="checkbox" name="<?php echo esc_attr($f('vip_s')); ?>" value="1" <?php checked($d['vip_s']); ?>> <?php esc_html_e('参与会员折扣', 'xi'); ?></label>
-            <label><input type="checkbox" name="<?php echo esc_attr($f('refund')); ?>" value="1" <?php checked($d['refund']); ?>> <?php esc_html_e('允许申请售后', 'xi'); ?></label>
         </div>
 
         <h4 class="xi-pm-h"><?php esc_html_e('限时折扣', 'xi'); ?></h4>
@@ -122,19 +121,15 @@ function xi_product_meta_box_html($post)
             <script type="text/html" id="xi-spec-tpl"><?php xi_product_spec_row('__i__', array(), array()); ?></script>
         </div>
 
-        <h4 class="xi-pm-h"><?php esc_html_e('发货', 'xi'); ?></h4>
+        <h4 class="xi-pm-h"><?php esc_html_e('交付', 'xi'); ?></h4>
         <div>
-            <label><?php esc_html_e('发货方式', 'xi'); ?></label>
+            <label><?php esc_html_e('交付方式', 'xi'); ?></label>
             <select name="<?php echo esc_attr($f('delivery')); ?>">
                 <?php foreach (xi_delivery_types() as $k => $label) : ?>
                     <option value="<?php echo esc_attr($k); ?>" <?php selected($d['delivery'], $k); ?>><?php echo esc_html($label); ?></option>
                 <?php endforeach; ?>
             </select>
-        </div>
-        <div>
-            <label><?php esc_html_e('运费（元）', 'xi'); ?></label>
-            <input type="number" step="0.01" min="0" name="<?php echo esc_attr($f('shipping_fee')); ?>" value="<?php echo esc_attr($d['shipping_fee']); ?>" placeholder="0">
-            <p class="description"><?php esc_html_e('仅实物商品；同一订单取最高运费，满额包邮在商城设置中配置', 'xi'); ?></p>
+            <p class="description"><?php esc_html_e('发卡模式只支持线上交付：卡密或下载内容，付款后自动发放', 'xi'); ?></p>
         </div>
         <div>
             <label><input type="checkbox" name="<?php echo esc_attr($f('need_contact')); ?>" value="1" <?php checked($d['need_contact']); ?>> <?php esc_html_e('下单需填写联系方式', 'xi'); ?></label>
@@ -142,13 +137,13 @@ function xi_product_meta_box_html($post)
         </div>
         <div class="is-wide">
             <label><?php esc_html_e('自动发货内容', 'xi'); ?></label>
-            <textarea rows="3" name="<?php echo esc_attr($f('delivery_text')); ?>" placeholder="<?php esc_attr_e('下载地址、提取码、使用说明等，付款后自动发给买家', 'xi'); ?>"><?php echo esc_textarea($d['delivery_text']); ?></textarea>
-            <p class="description"><?php esc_html_e('发货方式为「自动发货（固定内容）」时使用', 'xi'); ?></p>
+            <textarea rows="3" name="<?php echo esc_attr($f('delivery_text')); ?>" placeholder="<?php esc_attr_e('下载地址、提取码、授权说明等，付款后自动发给买家', 'xi'); ?>"><?php echo esc_textarea($d['delivery_text']); ?></textarea>
+            <p class="description"><?php esc_html_e('交付方式为「自动发货（软件 / 下载内容）」时使用', 'xi'); ?></p>
         </div>
         <div class="is-wide">
             <label><?php esc_html_e('卡密库存（无规格时）', 'xi'); ?></label>
             <textarea rows="4" name="xi_product_cards[0]" placeholder="<?php esc_attr_e('每行一个卡密，售出后自动移除', 'xi'); ?>"><?php echo esc_textarea(implode("\n", isset($cards[0]) && !$d['specs'] ? (array) $cards[0] : array())); ?></textarea>
-            <p class="description"><?php esc_html_e('发货方式为「自动发卡」时使用；有规格时在规格表中填写', 'xi'); ?></p>
+            <p class="description"><?php esc_html_e('交付方式为「自动发卡」时使用；有规格时在规格表中填写', 'xi'); ?></p>
         </div>
 
         <h4 class="xi-pm-h"><?php esc_html_e('展示', 'xi'); ?></h4>
@@ -244,17 +239,17 @@ function xi_product_save($post_id)
         'sales_base'    => (int) $num(isset($in['sales_base']) ? $in['sales_base'] : 0, true),
         'badge'         => isset($in['badge']) ? mb_substr(sanitize_text_field($in['badge']), 0, 10) : '',
         'vip_s'         => empty($in['vip_s']) ? 0 : 1,
-        'refund'        => empty($in['refund']) ? 0 : 1,
+        'refund'        => 0,
         'sale_discount' => isset($in['sale_discount']) && (float) $in['sale_discount'] > 0 && (float) $in['sale_discount'] < 10 ? round((float) $in['sale_discount'], 1) : '',
         'sale_start'    => $time(isset($in['sale_start']) ? $in['sale_start'] : ''),
         'sale_end'      => $time(isset($in['sale_end']) ? $in['sale_end'] : ''),
-        'delivery'      => isset($in['delivery']) && array_key_exists($in['delivery'], xi_delivery_types()) ? $in['delivery'] : 'auto_text',
+        'delivery'      => isset($in['delivery']) && array_key_exists($in['delivery'], xi_delivery_types()) ? $in['delivery'] : 'auto_card',
         'delivery_text' => isset($in['delivery_text']) ? sanitize_textarea_field($in['delivery_text']) : '',
         'need_contact'  => empty($in['need_contact']) ? 0 : 1,
         'need_remark'   => empty($in['need_remark']) ? 0 : 1,
         'gallery'       => isset($in['gallery']) ? implode(',', array_filter(array_map('intval', explode(',', $in['gallery'])))) : '',
         'params'        => isset($in['params']) ? sanitize_textarea_field($in['params']) : '',
-        'shipping_fee'  => $num(isset($in['shipping_fee']) ? $in['shipping_fee'] : ''),
+        'shipping_fee'  => '',
         'buy_notice'    => isset($in['buy_notice']) ? sanitize_textarea_field($in['buy_notice']) : '',
         'specs'         => array(),
     );
@@ -426,7 +421,7 @@ function xi_shop_export_action()
     header('Content-Disposition: attachment; filename=shop-orders-' . wp_date('Ymd-His') . '.csv');
     $out = fopen('php://output', 'w');
     fwrite($out, "ï»¿"); // Excel 识别 UTF-8
-    fputcsv($out, array('订单号', '用户', '商品', '数量', '计价', '商品金额', '优惠', '运费', '实付', '付款方式', '状态', '收货信息', '联系方式', '备注', '物流', '下单时间', '付款时间'), ",", "\"", "\\");
+    fputcsv($out, array('订单号', '用户', '商品', '数量', '计价', '商品金额', '优惠', '实付', '付款方式', '状态', '联系方式', '备注', '下单时间', '付款时间'), ",", "\"", "\\");
     foreach ($rows as $o) {
         $u     = get_userdata($o->user_id);
         $names = array();
@@ -443,14 +438,11 @@ function xi_shop_export_action()
             $o->price_type === 'points' ? xi_points_name() : '元',
             $o->goods_total,
             $o->discount,
-            isset($o->shipping) ? $o->shipping : 0,
             $o->total,
             $o->pay_type ? xi_shop_pay_type_name($o->pay_type) : '',
             xi_shop_status_name($o->status),
-            $o->address ? xi_shop_address_text($o->address) : '',
             $o->contact,
             $o->remark,
-            !empty($o->express['number']) ? $o->express['company'] . ' ' . $o->express['number'] : '',
             $o->created_at,
             $o->paid_at,
         );
@@ -557,7 +549,6 @@ function xi_shop_orders_page()
     }
     $base     = admin_url('edit.php?post_type=xi_product&page=xi_shop_orders');
     $colors   = array(0 => '#e2a33b', 1 => '#d63638', 2 => '#2271b1', 3 => '#0f9d58', 4 => '#999', 5 => '#d63638', 6 => '#999');
-    $express  = array_filter(array_map('trim', preg_split('/[\r\n,，]+/u', (string) _xz('shop_express', '顺丰速运,中通快递,圆通速递,韵达快递,申通快递,京东物流,邮政EMS,极兔速递'))));
     ?>
     <div class="wrap xi-shop-admin">
         <h1><?php esc_html_e('商城订单', 'xi'); ?></h1>
@@ -634,28 +625,15 @@ function xi_shop_orders_page()
                                         <?php if (!empty($it['delivered'])) : ?><br><code><?php echo esc_html(implode("\n", (array) $it['delivered'])); ?></code><?php endif; ?>
                                     </div>
                                 <?php endforeach; ?>
-                                <?php if ($o->address) : ?><div><b><?php esc_html_e('收货：', 'xi'); ?></b><?php echo esc_html(xi_shop_address_text($o->address)); ?></div><?php endif; ?>
                                 <?php if ($o->contact) : ?><div><b><?php esc_html_e('联系方式：', 'xi'); ?></b><?php echo esc_html($o->contact); ?></div><?php endif; ?>
                                 <?php if ($o->remark) : ?><div><b><?php esc_html_e('备注：', 'xi'); ?></b><?php echo esc_html($o->remark); ?></div><?php endif; ?>
-                                <?php if (!empty($o->express['number'])) : ?><div><b><?php esc_html_e('物流：', 'xi'); ?></b><?php echo esc_html($o->express['company'] . ' ' . $o->express['number']); ?></div><?php endif; ?>
-                                <?php if (!empty($o->refund['reason'])) : ?><div><b><?php esc_html_e('售后原因：', 'xi'); ?></b><?php echo esc_html($o->refund['reason']); ?><?php if (!empty($o->refund['reply'])) : ?><br><b><?php esc_html_e('处理回复：', 'xi'); ?></b><?php echo esc_html($o->refund['reply']); ?><?php endif; ?><?php if (!empty($o->refund['manual'])) : ?><br><b style="color:#d63638"><?php esc_html_e('站点未开启余额，请线下退款', 'xi'); ?></b><?php endif; ?></div><?php endif; ?>
                                 <?php
                                 $ex = xi_shop_order_extra($o);
                                 $parts = array();
                                 if ($ex['promo']) { $parts[] = $ex['promo']['text'] . ' -' . xi_money($ex['promo']['amount']); }
                                 if ($ex['coupon']) { $parts[] = sprintf(__('优惠码 %1$s -%2$s', 'xi'), $ex['coupon']['code'], xi_money($ex['coupon']['amount'])); }
                                 if (!empty($ex['points']['points'])) { $parts[] = sprintf(__('%1$d %2$s抵扣 -%3$s', 'xi'), $ex['points']['points'], xi_points_name(), xi_money($ex['points']['value'])) . (!empty($ex['points_released']) ? __('（已退回）', 'xi') : ''); }
-                                if ((float) $ex['shipping'] > 0) { $parts[] = sprintf(__('运费 +%s', 'xi'), xi_money($ex['shipping'])); }
                                 if ($parts) : ?><div><b><?php esc_html_e('金额明细：', 'xi'); ?></b><?php echo esc_html(implode('；', $parts)); ?></div><?php endif; ?>
-                                <?php if (!empty($o->refund['type']) && in_array($st, array(5, 6), true)) :
-                                    $rtypes  = xi_shop_refund_types();
-                                    $stages  = array('apply' => __('待处理', 'xi'), 'returning' => __('等待买家寄回', 'xi'), 'returned' => __('买家已寄回，待确认收货', 'xi'));
-                                    $stage   = isset($o->refund['stage']) ? $o->refund['stage'] : '';
-                                    ?>
-                                    <div><b><?php esc_html_e('售后类型：', 'xi'); ?></b><?php echo esc_html($rtypes[$o->refund['type']]); ?><?php if ($st === 5 && isset($stages[$stage])) : ?> · <?php echo esc_html($stages[$stage]); ?><?php endif; ?>
-                                        <?php if (!empty($o->refund['return_express']['number'])) : ?><br><b><?php esc_html_e('退货物流：', 'xi'); ?></b><?php echo esc_html($o->refund['return_express']['company'] . ' ' . $o->refund['return_express']['number']); ?><?php endif; ?>
-                                    </div>
-                                <?php endif; ?>
                                 <?php if ($o->note) : ?><div style="color:#d63638"><?php echo esc_html($o->note); ?></div><?php endif; ?>
                                 <form method="post">
                                     <?php wp_nonce_field('xi_shop_orders'); ?>
@@ -664,43 +642,19 @@ function xi_shop_orders_page()
                                     <button class="button" name="xi_shop_do" value="note_save"><?php esc_html_e('保存备注', 'xi'); ?></button>
                                 </form>
 
-                                <?php if ($st === 1) :
-                                    $physical = (bool) array_filter($o->items, function ($it) { return $it['delivery'] === 'physical'; });
-                                    $virtual  = (bool) array_filter($o->items, function ($it) { return $it['delivery'] !== 'physical' && (empty($it['delivered']) || !empty($it['short'])); });
-                                    ?>
+                                <?php if ($st === 1) : ?>
                                     <form method="post">
                                         <?php wp_nonce_field('xi_shop_orders'); ?>
                                         <input type="hidden" name="order_no" value="<?php echo esc_attr($o->order_no); ?>">
-                                        <?php if ($physical) : ?>
-                                            <select name="company"><?php foreach ($express as $c) : ?><option><?php echo esc_html($c); ?></option><?php endforeach; ?></select>
-                                            <input type="text" name="number" placeholder="<?php esc_attr_e('快递单号', 'xi'); ?>">
-                                        <?php endif; ?>
-                                        <?php if ($virtual) : ?>
-                                            <textarea name="content" placeholder="<?php esc_attr_e('发货内容：卡密、下载地址、账号等，会发送给买家', 'xi'); ?>"></textarea>
-                                        <?php endif; ?>
-                                        <button class="button button-primary" name="xi_shop_do" value="ship"><?php esc_html_e('确认发货', 'xi'); ?></button>
+                                        <textarea name="content" placeholder="<?php esc_attr_e('补发内容：卡密、下载地址或授权信息，会发送给买家', 'xi'); ?>"></textarea>
+                                        <button class="button button-primary" name="xi_shop_do" value="ship"><?php esc_html_e('补发并完成订单', 'xi'); ?></button>
                                     </form>
-                                <?php elseif ($st === 5) : ?>
+                                <?php elseif ($st === 0 || $st === 4) : ?>
                                     <form method="post">
                                         <?php wp_nonce_field('xi_shop_orders'); ?>
                                         <input type="hidden" name="order_no" value="<?php echo esc_attr($o->order_no); ?>">
-                                        <textarea name="reply" placeholder="<?php esc_attr_e('处理说明（选填，会通知买家）', 'xi'); ?>"></textarea>
-                                        <?php if (isset($o->refund['type'], $o->refund['stage']) && $o->refund['type'] === 'return' && $o->refund['stage'] === 'apply') : ?>
-                                            <button class="button button-primary" name="xi_shop_do" value="return_ok"><?php esc_html_e('同意退货', 'xi'); ?></button>
-                                        <?php endif; ?>
-                                        <button class="button<?php echo isset($o->refund['type']) && $o->refund['type'] === 'return' && (!isset($o->refund['stage']) || $o->refund['stage'] !== 'returned') ? '' : ' button-primary'; ?>" name="xi_shop_do" value="refund_ok" data-confirm="<?php esc_attr_e('确认退款？款项会退回买家的余额 / 积分', 'xi'); ?>"><?php echo isset($o->refund['stage']) && $o->refund['stage'] === 'returned' ? esc_html__('确认收到退货并退款', 'xi') : esc_html__('同意退款', 'xi'); ?></button>
-                                        <button class="button" name="xi_shop_do" value="refund_no"><?php esc_html_e('驳回', 'xi'); ?></button>
-                                    </form>
-                                <?php elseif ($st === 0 || $st === 4 || $st === 2) : ?>
-                                    <form method="post">
-                                        <?php wp_nonce_field('xi_shop_orders'); ?>
-                                        <input type="hidden" name="order_no" value="<?php echo esc_attr($o->order_no); ?>">
-                                        <?php if ($st === 2) : ?>
-                                            <button class="button" name="xi_shop_do" value="finish"><?php esc_html_e('标记为已完成', 'xi'); ?></button>
-                                        <?php else : ?>
-                                            <button class="button" name="xi_shop_do" value="paid" data-confirm="<?php esc_attr_e('确认买家已线下付款？订单会进入发货流程', 'xi'); ?>"><?php esc_html_e('补单', 'xi'); ?></button>
-                                            <?php if ($st === 0) : ?><button class="button button-link-delete" name="xi_shop_do" value="close"><?php esc_html_e('关闭订单', 'xi'); ?></button><?php endif; ?>
-                                        <?php endif; ?>
+                                        <button class="button" name="xi_shop_do" value="paid" data-confirm="<?php esc_attr_e('确认买家已付款？订单会自动发放卡密或下载内容', 'xi'); ?>"><?php esc_html_e('补单', 'xi'); ?></button>
+                                        <?php if ($st === 0) : ?><button class="button button-link-delete" name="xi_shop_do" value="close"><?php esc_html_e('关闭订单', 'xi'); ?></button><?php endif; ?>
                                     </form>
                                 <?php endif; ?>
                             </div>
@@ -741,8 +695,8 @@ function xi_shop_option_fields()
             'id'      => 'shop_s',
             'type'    => 'switcher',
             'title'   => __('启用商城', 'xi'),
-            'desc'    => __('开启后后台出现「商城」菜单，可发布虚拟 / 实物商品。保存后访问一次前台即可生效', 'xi'),
-            'default' => false,
+            'desc'    => __('发卡网模式：只出售线上卡密、软件与下载内容，自动发放，不涉及发货、运费和收货地址', 'xi'),
+            'default' => true,
         ),
         array(
             'dependency' => array('shop_s', '!=', ''),
@@ -870,7 +824,7 @@ function xi_shop_option_fields()
         array(
             'dependency' => array('shop_s', '!=', ''),
             'type'       => 'subheading',
-            'content'    => __('积分抵扣与运费', 'xi'),
+            'content'    => __('积分抵扣', 'xi'),
         ),
         array(
             'dependency' => array('shop_s', '!=', ''),
@@ -894,24 +848,8 @@ function xi_shop_option_fields()
             'type'       => 'number',
             'title'      => __('最多抵扣', 'xi'),
             'unit'       => '%',
-            'desc'       => __('占订单金额（不含运费）的最高比例', 'xi'),
+            'desc'       => __('占订单金额的最高比例', 'xi'),
             'default'    => 20,
-        ),
-        array(
-            'dependency' => array('shop_s', '!=', ''),
-            'id'         => 'shop_free_shipping',
-            'type'       => 'number',
-            'title'      => __('满额包邮', 'xi'),
-            'desc'       => __('实物订单优惠后金额达到此数免运费，0 为不设置；运费在商品中单独设置', 'xi'),
-            'default'    => 0,
-            'attributes' => array('step' => '0.01'),
-        ),
-        array(
-            'dependency' => array('shop_s', '!=', ''),
-            'id'         => 'shop_vip_free_shipping',
-            'type'       => 'switcher',
-            'title'      => __('会员包邮', 'xi'),
-            'default'    => false,
         ),
         array(
             'dependency' => array('shop_s', '!=', ''),
@@ -941,7 +879,7 @@ function xi_shop_option_fields()
         array(
             'dependency' => array('shop_s', '!=', ''),
             'type'       => 'subheading',
-            'content'    => __('订单与售后', 'xi'),
+            'content'    => __('订单', 'xi'),
         ),
         array(
             'dependency' => array('shop_s', '!=', ''),
@@ -953,51 +891,19 @@ function xi_shop_option_fields()
         ),
         array(
             'dependency' => array('shop_s', '!=', ''),
-            'id'         => 'shop_auto_confirm_days',
-            'type'       => 'number',
-            'title'      => __('发货后自动确认收货', 'xi'),
-            'unit'       => __('天', 'xi'),
-            'default'    => 10,
-        ),
-        array(
-            'dependency' => array('shop_s', '!=', ''),
-            'id'         => 'shop_refund_s',
-            'type'       => 'switcher',
-            'title'      => __('允许申请售后', 'xi'),
-            'desc'       => __('同意退款后，余额 / 在线支付的订单退回到买家站内余额，积分订单退回积分', 'xi'),
-            'default'    => true,
-        ),
-        array(
-            'dependency' => array(array('shop_s', '!=', ''), array('shop_refund_s', '!=', '')),
-            'id'         => 'shop_refund_days',
-            'type'       => 'number',
-            'title'      => __('售后期限', 'xi'),
-            'unit'       => __('天', 'xi'),
-            'desc'       => __('付款后多少天内可申请，0 为不限', 'xi'),
-            'default'    => 7,
-        ),
-        array(
-            'dependency' => array(array('shop_s', '!=', ''), array('shop_refund_s', '!=', '')),
-            'id'         => 'shop_return_address',
-            'type'       => 'textarea',
-            'title'      => __('退货地址', 'xi'),
-            'desc'       => __('买家申请「退货退款」并经你同意后显示给买家', 'xi'),
-        ),
-        array(
-            'dependency' => array('shop_s', '!=', ''),
             'id'         => 'shop_stock_alert',
             'type'       => 'number',
             'title'      => __('库存预警', 'xi'),
-            'desc'       => __('付款后剩余库存（含卡密）不超过此数时邮件提醒站长，0 为关闭', 'xi'),
+            'desc'       => __('付款后剩余卡密不超过此数时邮件提醒站长，0 为关闭', 'xi'),
             'default'    => 3,
         ),
         array(
             'dependency' => array('shop_s', '!=', ''),
-            'id'         => 'shop_express',
-            'type'       => 'textarea',
-            'title'      => __('快递公司', 'xi'),
-            'desc'       => __('发货时可选的快递公司，逗号或换行分隔', 'xi'),
-            'default'    => '顺丰速运,中通快递,圆通速递,韵达快递,申通快递,京东物流,邮政EMS,极兔速递',
+            'id'         => 'shop_notify_admin_s',
+            'type'       => 'switcher',
+            'title'      => __('新订单邮件提醒', 'xi'),
+            'desc'       => __('有待补卡订单时发邮件给站长', 'xi'),
+            'default'    => true,
         ),
         array(
             'dependency' => array('shop_s', '!=', ''),

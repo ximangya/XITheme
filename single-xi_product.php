@@ -102,7 +102,7 @@ while (have_posts()) :
                     <li><span><?php esc_html_e('销量', 'xi'); ?></span><b><?php echo esc_html(xi_number(xi_product_sales($pid))); ?></b></li>
                     <li><span><?php esc_html_e('评分', 'xi'); ?></span><b><?php echo $reviews ? esc_html(number_format($rating, 1)) : '—'; ?></b></li>
                     <li><span><?php esc_html_e('浏览', 'xi'); ?></span><b><?php echo esc_html(xi_number(function_exists('xi_get_views') ? xi_get_views($pid) : 0)); ?></b></li>
-                    <li><span><?php esc_html_e('发货', 'xi'); ?></span><b><?php echo esc_html(in_array($data['delivery'], array('auto_card', 'auto_text'), true) ? __('自动发货', 'xi') : ($data['delivery'] === 'physical' ? __('快递发货', 'xi') : __('人工发货', 'xi'))); ?></b></li>
+                    <li><span><?php esc_html_e('交付', 'xi'); ?></span><b><?php echo esc_html($data['delivery'] === 'auto_card' ? __('自动发卡', 'xi') : __('自动发货', 'xi')); ?></b></li>
                 </ul>
 
                 <?php if ($specs) : ?>
@@ -147,13 +147,8 @@ while (have_posts()) :
                 </div>
 
                 <ul class="xi-product-service">
-                    <li><?php echo xi_icon('check'); ?><?php echo esc_html($types[$data['delivery']]); ?></li>
-                    <?php if ($data['delivery'] === 'physical' && $base && $base['type'] === 'money') :
-                        $fee  = (float) $data['shipping_fee'];
-                        $free = (float) _xz('shop_free_shipping', 0); ?>
-                        <li><?php echo xi_icon('truck'); ?><?php echo $fee > 0 ? esc_html(sprintf(__('运费 ¥%s', 'xi'), xi_shop_num($fee)) . ($free > 0 ? sprintf(__('，满 %s 包邮', 'xi'), xi_shop_num($free)) : '')) : esc_html__('包邮', 'xi'); ?></li>
-                    <?php endif; ?>
-                    <li><?php echo xi_icon('check'); ?><?php echo $data['refund'] && _xz('shop_refund_s', true) ? esc_html(sprintf(__('支持售后（%d 天内）', 'xi'), (int) _xz('shop_refund_days', 7))) : esc_html__('虚拟商品不支持退款', 'xi'); ?></li>
+                    <li><?php echo xi_icon('check'); ?><?php echo esc_html($data['delivery'] === 'auto_card' ? __('付款后自动发放卡密，可在用户中心查看', 'xi') : __('付款后自动发放下载内容 / 授权信息', 'xi')); ?></li>
+                    <li><?php echo xi_icon('check'); ?><?php esc_html_e('线上商品，售出后不支持退换', 'xi'); ?></li>
                     <li><?php echo xi_icon('check'); ?><?php esc_html_e('订单进度可在用户中心查看', 'xi'); ?></li>
                 </ul>
             </div>

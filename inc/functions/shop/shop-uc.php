@@ -13,7 +13,6 @@ function xi_shop_uc_tabs($tabs, $user)
         return $tabs;
     }
     $tabs['shop']    = array(__('商城订单', 'xi'), 'bag');
-    $tabs['address'] = array(__('收货地址', 'xi'), 'pin');
     return $tabs;
 }
 add_filter('xi_uc_tabs', 'xi_shop_uc_tabs', 10, 2);
@@ -150,26 +149,8 @@ function xi_shop_order_card($o, $open = false)
     }
 
     echo '<div class="xi-shop-order-info">';
-    if ($o->address) {
-        echo '<p>' . xi_icon('pin') . esc_html(xi_shop_address_text($o->address)) . '</p>';
-    }
-    if (!empty($o->express['number'])) {
-        echo '<p>' . xi_icon('truck') . esc_html($o->express['company'] . ' ' . $o->express['number']) . ' <button type="button" class="xi-link-btn" data-xi-copy="' . esc_attr($o->express['number']) . '">' . esc_html__('复制单号', 'xi') . '</button> <a class="xi-link-btn" href="' . esc_url(xi_shop_track_url($o->express['number'])) . '" target="_blank" rel="noopener nofollow">' . esc_html__('查物流', 'xi') . '</a></p>';
-    }
     if ($o->remark) {
         echo '<p>' . xi_icon('comment') . esc_html($o->remark) . '</p>';
-    }
-    if (!empty($o->refund['reason']) && in_array($st, array(5, 6), true)) {
-        echo '<p>' . xi_icon('undo') . esc_html(sprintf(__('售后原因：%s', 'xi'), $o->refund['reason'])) . '</p>';
-    }
-    if (!empty($o->refund['reply'])) {
-        echo '<p>' . xi_icon('info') . esc_html(sprintf(__('商家回复：%s', 'xi'), $o->refund['reply'])) . '</p>';
-    }
-    $stage = $st === 5 && isset($o->refund['stage']) ? $o->refund['stage'] : '';
-    if ($stage === 'returning') {
-        echo '<p class="is-strong">' . xi_icon('box') . esc_html__('商家已同意退货，请寄回商品后填写退货快递单号', 'xi') . (!empty($o->refund['address']) ? '<br>' . esc_html__('退货地址：', 'xi') . nl2br(esc_html($o->refund['address'])) : '') . '</p>';
-    } elseif ($stage === 'returned' && !empty($o->refund['return_express']['number'])) {
-        echo '<p>' . xi_icon('box') . esc_html(sprintf(__('已寄回：%1$s %2$s，等待商家确认收货', 'xi'), $o->refund['return_express']['company'], $o->refund['return_express']['number'])) . '</p>';
     }
     $ex    = xi_shop_order_extra($o);
     $parts = array();
@@ -181,9 +162,6 @@ function xi_shop_order_card($o, $open = false)
     }
     if (!empty($ex['points']['points'])) {
         $parts[] = sprintf(__('%1$d %2$s抵扣 -¥%3$s', 'xi'), $ex['points']['points'], xi_points_name(), xi_money($ex['points']['value'])) . (!empty($ex['points_released']) ? __('（已退回）', 'xi') : '');
-    }
-    if ((float) $ex['shipping'] > 0) {
-        $parts[] = sprintf(__('运费 +¥%s', 'xi'), xi_money($ex['shipping']));
     }
     if ($parts) {
         echo '<p>' . xi_icon('tag') . esc_html(implode('　', $parts)) . '</p>';
@@ -208,19 +186,6 @@ function xi_shop_order_card($o, $open = false)
             }
             echo '</select><button type="button" class="xi-btn xi-btn-sm xi-btn-accent" data-xi-order-pay>' . esc_html__('去付款', 'xi') . '</button>';
         }
-    } elseif ($st === 2) {
-        echo '<button type="button" class="xi-btn xi-btn-sm xi-btn-accent" data-xi-order-do="confirm">' . esc_html__('确认收货', 'xi') . '</button>';
-    } elseif ($st === 5) {
-        if ($stage === 'returning') {
-            echo '<button type="button" class="xi-btn xi-btn-sm xi-btn-accent" data-xi-return-ship>' . esc_html__('填写退货快递', 'xi') . '</button>';
-        }
-        if ($stage !== 'returned') {
-            echo '<button type="button" class="xi-btn xi-btn-sm" data-xi-order-do="refund_cancel">' . esc_html__('撤销售后', 'xi') . '</button>';
-        }
-    }
-    if (xi_shop_can_refund($o)) {
-        $can_return = in_array($st, array(2, 3), true) && xi_shop_order_has_physical($o);
-        echo '<button type="button" class="xi-btn xi-btn-sm" data-xi-order-refund="' . ($can_return ? 'return' : 'refund') . '">' . esc_html__('申请售后', 'xi') . '</button>';
     }
     if (in_array($st, array(3, 4, 6), true) && count($o->items) === 1 && get_post_status($o->items[0]['pid']) === 'publish') {
         echo '<a class="xi-btn xi-btn-sm" href="' . esc_url(get_permalink($o->items[0]['pid'])) . '">' . esc_html__('再次购买', 'xi') . '</a>';
@@ -256,7 +221,7 @@ function xi_shop_uc_panels($user, $active)
             </div>
             <nav class="xi-shop-st-tabs">
                 <a href="<?php echo esc_url($base); ?>" class="<?php echo $filter === null ? 'is-active' : ''; ?>"><?php esc_html_e('全部', 'xi'); ?></a>
-                <?php foreach (array(0, 1, 2, 3, 5) as $k) : ?>
+                <?php foreach (array(0, 1, 3) as $k) : ?>
                     <a href="<?php echo esc_url(add_query_arg('st', $k, $base)); ?>" class="<?php echo $filter === $k ? 'is-active' : ''; ?>"><?php echo esc_html(xi_shop_status_name($k)); ?><?php if (!empty($counts[$k]) && $k !== 3) : ?><em><?php echo (int) $counts[$k]; ?></em><?php endif; ?></a>
                 <?php endforeach; ?>
             </nav>
@@ -277,19 +242,7 @@ function xi_shop_uc_panels($user, $active)
             <?php endif; ?>
         </div>
     </section>
-
-    <section class="xi-uc-panel<?php echo $active === 'address' ? ' is-active' : ''; ?>" data-uc-panel="address">
-        <div class="xi-card xi-uc-box">
-            <div class="xi-uc-box-head">
-                <h3 class="xi-section-title"><?php esc_html_e('收货地址', 'xi'); ?></h3>
-                <button type="button" class="xi-btn xi-btn-sm xi-btn-accent" data-xi-address-edit><?php echo xi_icon('plus'); ?><?php esc_html_e('新增地址', 'xi'); ?></button>
-            </div>
-            <?php xi_shop_address_list($user->ID, false); ?>
-        </div>
-    </section>
     <?php
-    xi_shop_address_dialog();
-    xi_shop_refund_dialog();
 }
 add_action('xi_uc_panels', 'xi_shop_uc_panels', 10, 2);
 

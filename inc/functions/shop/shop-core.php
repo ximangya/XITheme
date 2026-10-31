@@ -12,7 +12,16 @@ if (!defined('ABSPATH')) {
 
 function xi_shop_enabled()
 {
-    return (bool) _xz('shop_s', false);
+    return (bool) _xz('shop_s', true);
+}
+
+/**
+ * 曦主题商城固定为「发卡网」模式：只出售线上卡密 / 软件 / 下载内容，
+ * 不涉及实物、运费、收货地址与物流。
+ */
+function xi_shop_digital_only()
+{
+    return true;
 }
 
 function xi_shop_name()
@@ -251,7 +260,7 @@ function xi_product_defaults()
         'stock'         => '',        // 留空不限
         'limit'         => 0,         // 每人限购，0 不限
         'sales_base'    => 0,         // 虚拟销量
-        'delivery'      => 'auto_text', // auto_card 自动发卡 | auto_text 自动发货内容 | manual 人工发货（虚拟）| physical 实物
+        'delivery'      => 'auto_card', // auto_card 自动发卡 | auto_text 自动发货内容
         'delivery_text' => '',
         'sale_discount' => '',        // 限时折扣，8.5 表示 85 折
         'sale_start'    => '',
@@ -261,9 +270,9 @@ function xi_product_defaults()
         'params'        => '',        // 商品参数，每行「名称：值」
         'need_contact'  => 0,
         'need_remark'   => 0,
-        'refund'        => 1,         // 允许售后
+        'refund'        => 0,         // 发卡网模式不支持售后
         'badge'         => '',        // 角标文字
-        'shipping_fee'  => '',        // 实物运费（元）
+        'shipping_fee'  => '',        // 保留字段，发卡模式下不使用
         'buy_notice'    => '',        // 本商品的购买须知
     );
 }
@@ -279,6 +288,10 @@ function xi_product_data($post_id, $fresh = false)
         $meta              = get_post_meta($post_id, 'xi_product', true);
         $data              = wp_parse_args(is_array($meta) ? $meta : array(), xi_product_defaults());
         $data['specs']     = is_array($data['specs']) ? array_values($data['specs']) : array();
+        // 兼容旧数据：实物 / 人工发货统一按「自动发货内容」处理，避免发卡模式下出现无法交付的订单
+        if (!array_key_exists($data['delivery'], xi_delivery_types())) {
+            $data['delivery'] = 'auto_text';
+        }
         $cache[$post_id]   = $data;
     }
     return $cache[$post_id];
@@ -288,9 +301,7 @@ function xi_delivery_types()
 {
     return array(
         'auto_card' => __('自动发卡（卡密）', 'xi'),
-        'auto_text' => __('自动发货（固定内容）', 'xi'),
-        'manual'    => __('人工发货（虚拟）', 'xi'),
-        'physical'  => __('实物（需收货地址）', 'xi'),
+        'auto_text' => __('自动发货（软件 / 下载内容）', 'xi'),
     );
 }
 

@@ -19,6 +19,10 @@ $stock = xi_product_total_stock($pid);
     </span>
     <span class="xi-shop-card-body">
         <b class="xi-shop-card-title"><?php the_title(); ?></b>
+        <span class="xi-shop-card-tags">
+            <em><?php echo esc_html($data['delivery'] === 'auto_card' ? __('自动发卡', 'xi') : __('自动发货', 'xi')); ?></em>
+            <?php if ($stock > 0) : ?><em class="is-stock"><?php printf(esc_html__('库存 %d', 'xi'), (int) $stock); ?></em><?php endif; ?>
+        </span>
         <span class="xi-shop-card-foot">
             <?php if ($price) : ?>
                 <span class="xi-shop-card-price">

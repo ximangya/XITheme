@@ -24,7 +24,7 @@ $active   = $is_cat ? ($ancestor ? (int) end($ancestor) : (int) $term->term_id) 
             <?php if ($term && $term->description) : ?>
                 <p><?php echo esc_html(wp_strip_all_tags($term->description)); ?></p>
             <?php elseif (!$term) : ?>
-                <p><?php esc_html_e('精选好物，付款后自动发货', 'xi'); ?></p>
+                <p><?php esc_html_e('只售线上卡密与软件，付款后自动发放', 'xi'); ?></p>
             <?php endif; ?>
         </div>
         <form class="xi-shop-search" action="<?php echo esc_url(xi_shop_url()); ?>" method="get" role="search">

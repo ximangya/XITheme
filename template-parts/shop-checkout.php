@@ -81,7 +81,6 @@ $raw_cart  = isset($_GET['cart']) ? sanitize_text_field(wp_unslash($_GET['cart']
                         <div data-xi-row="promo"<?php echo $quote['promo'] ? '' : ' hidden'; ?>><dt data-xi-label><?php echo $quote['promo'] ? esc_html($quote['promo']['text']) : ''; ?></dt><dd>-¥<span data-xi-val><?php echo $quote['promo'] ? esc_html(xi_money($quote['promo']['amount'])) : ''; ?></span></dd></div>
                         <div data-xi-row="coupon" hidden><dt data-xi-label><?php esc_html_e('优惠码', 'xi'); ?></dt><dd>-¥<span data-xi-val></span></dd></div>
                         <div data-xi-row="points" hidden><dt data-xi-label><?php echo esc_html(sprintf(__('%s抵扣', 'xi'), xi_points_name())); ?></dt><dd>-¥<span data-xi-val></span></dd></div>
-                        <div data-xi-row="shipping"<?php echo $built['need_address'] && $type === 'money' ? '' : ' hidden'; ?>><dt data-xi-label><?php esc_html_e('运费', 'xi'); ?></dt><dd><span data-xi-val><?php echo (float) $quote['shipping'] > 0 ? '¥' . esc_html(xi_money($quote['shipping'])) : esc_html__('包邮', 'xi'); ?></span></dd></div>
                         <div class="is-total"><dt><?php esc_html_e('应付', 'xi'); ?></dt><dd data-xi-total><?php echo esc_html(xi_price_text($quote['total'], $type)); ?></dd></div>
                     </dl>
                     <?php if ($type === 'money' && ($next = xi_shop_promo_next($quote['goods'])) && $quote['goods'] > 0) : ?>
@@ -108,7 +107,6 @@ $raw_cart  = isset($_GET['cart']) ? sanitize_text_field(wp_unslash($_GET['cart']
                     <?php endif; ?>
                 </aside>
             </form>
-            <?php xi_shop_address_dialog(); ?>
         <?php endif; ?>
     <?php endif; ?>
 </main>

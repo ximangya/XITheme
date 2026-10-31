@@ -73,8 +73,8 @@ function xi_shop_statuses()
 {
     return array(
         0 => __('待付款', 'xi'),
-        1 => __('待发货', 'xi'),
-        2 => __('待收货', 'xi'),
+        1 => __('待补卡', 'xi'),
+        2 => __('已完成', 'xi'),
         3 => __('已完成', 'xi'),
         4 => __('已关闭', 'xi'),
         5 => __('售后中', 'xi'),
@@ -200,7 +200,7 @@ function xi_shop_build_items($user_id, $lines)
     $items  = array();
     $type   = null;
     $total  = 0;
-    $flags  = array('need_address' => false, 'need_contact' => false, 'need_remark' => false, 'refund' => true);
+    $flags  = array('need_address' => false, 'need_contact' => false, 'need_remark' => false, 'refund' => false);
     $merged = array();
     foreach ($lines as $line) {
         $key = (int) $line['pid'] . ':' . (int) $line['spec'];
@@ -250,10 +250,9 @@ function xi_shop_build_items($user_id, $lines)
             'subtotal' => $subtotal,
             'delivery' => $data['delivery'],
         );
-        $flags['need_address'] = $flags['need_address'] || $data['delivery'] === 'physical';
+        $flags['need_address'] = false; // 发卡网模式不收集收货地址
         $flags['need_contact'] = $flags['need_contact'] || !empty($data['need_contact']);
         $flags['need_remark']  = $flags['need_remark'] || !empty($data['need_remark']);
-        $flags['refund']       = $flags['refund'] && !empty($data['refund']);
     }
 
     return array_merge($flags, array(
@@ -571,7 +570,7 @@ function xi_shop_order_paid($order_no, $pay_type, $pay_no = '')
     } elseif (array_filter($items, function ($it) {
         return !empty($it['short']);
     })) {
-        $update['note'] = __('卡密库存不足，部分商品需人工补发', 'xi');
+        $update['note'] = __('卡密库存不足，订单待补卡', 'xi');
     }
     $wpdb->update($table, $update, array('order_no' => $order_no));
 
@@ -637,7 +636,7 @@ function xi_shop_order_ship($order_no, $args)
 {
     $order = xi_shop_get_order($order_no);
     if (!$order || (int) $order->status !== 1) {
-        return new WP_Error('status', __('订单不是待发货状态', 'xi'));
+        return new WP_Error('status', __('订单不是待补卡状态', 'xi'));
     }
     $items   = $order->items;
     $content = isset($args['content']) ? trim((string) $args['content']) : '';
