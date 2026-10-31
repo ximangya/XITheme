@@ -2,15 +2,24 @@
 
 淡白与青薄荷配色的 WordPress 博客主题，WinUI 3 × 液态玻璃界面，模块化小工具，后台设置基于嵌入式 Codestar Framework（CSF）。
 
-![版本](https://img.shields.io/badge/版本-V1.2-2bb39a) ![WordPress](https://img.shields.io/badge/WordPress-5.6%2B-21759b) ![PHP](https://img.shields.io/badge/PHP-7.0%2B-777bb4) ![许可](https://img.shields.io/badge/许可-GPLv2-blue)
+![版本](https://img.shields.io/badge/版本-V1.3-2bb39a) ![WordPress](https://img.shields.io/badge/WordPress-5.6%2B-21759b) ![PHP](https://img.shields.io/badge/PHP-7.0%2B-777bb4) ![许可](https://img.shields.io/badge/许可-GPLv2-blue)
 
 ![曦主题截图](screenshot.png)
 
 ## 下载
 
-前往 [Releases](https://github.com/ximangya/XITheme/releases) 下载最新版安装包 `xi-V1.2.zip`，在 WordPress 后台「外观 → 主题 → 安装主题 → 上传主题」中上传即可。
+前往 [Releases](https://github.com/ximangya/XITheme/releases) 下载最新版安装包 `xi-V1.3.zip`，在 WordPress 后台「外观 → 主题 → 安装主题 → 上传主题」中上传即可。
 
 > 请下载 Releases 里的安装包，而不是 GitHub 自动生成的「Source code」压缩包：后者的目录名不是 `xi`，直接上传会导致主题名称和路径不一致。
+
+## V1.3 更新
+
+- 新增小型音乐播放器，可在「站点美化 → 音乐播放器」开关
+- 支持上传本地 MP3 或填写在线播放地址，本地文件优先
+- 可自定义歌曲名、歌手、封面 / LOGO、默认音量与循环
+- 支持 9 种弹出位置和水平 / 垂直偏移，打开网页时弹出
+- 可收起为圆形悬浮按钮，播放器资源仅在开启且有音源时加载
+- 完整变更见 [CHANGELOG.md](CHANGELOG.md)
 
 ## V1.2 更新
 
@@ -40,7 +49,7 @@
 - 淡白 / 青薄荷配色，深浅色一键切换，主题色可自定义（深色模式可单独配色）
 - WinUI 3 风格液态玻璃界面，圆角、模糊度可调
 - 顶部多功能组件：幻灯片、搜索框、图标卡片、按钮组（7 种样式、6 种点击动作、动效）
-- 站点美化：自定义字体、LOGO 扫光、动态标题、灵动岛提示、飘落特效
+- 站点美化：自定义字体、LOGO 扫光、动态标题、灵动岛提示、飘落特效、小型音乐播放器
 - 文章头图、阅读进度条、文章目录、相关文章、面包屑
 
 **内容与编辑**
@@ -84,7 +93,7 @@
 
 ## 安装与升级
 
-1. 下载 Releases 中的 `xi-V1.2.zip`
+1. 下载 Releases 中的 `xi-V1.3.zip`
 2. 后台「外观 → 主题 → 安装主题 → 上传主题」，上传并启用
 3. 进入后台「曦主题设置」完成基础配置
 

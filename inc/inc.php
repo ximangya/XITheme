@@ -88,6 +88,7 @@ xi_require(array(
     'inc/functions/template-tags',
     'inc/functions/xi-brand-icons',
     'inc/functions/xi-beautify',
+    'inc/functions/xi-music',
     'inc/functions/xi-menu-icons',
     'inc/functions/xi-slider',
     'inc/functions/xi-header',
