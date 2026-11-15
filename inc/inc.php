@@ -89,6 +89,7 @@ xi_require(array(
     'inc/functions/xi-brand-icons',
     'inc/functions/xi-beautify',
     'inc/functions/xi-music',
+    'inc/functions/xi-wheel',
     'inc/functions/xi-menu-icons',
     'inc/functions/xi-slider',
     'inc/functions/xi-header',

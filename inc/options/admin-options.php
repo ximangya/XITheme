@@ -185,6 +185,52 @@ function xi_csf_admin_options()
     ));
 
     CSF::createSection($prefix, array(
+        'id'     => 'wheel',
+        'title'  => __('幸运大转盘', 'xi'),
+        'icon'   => 'fa fa-fw fa-refresh',
+        'fields' => array(
+            array(
+                'type'    => 'content',
+                'content' => __('首次保存或进入后台时会自动创建「幸运大转盘」页面；页面地址为 <code>/wheel/</code>（固定链接为朴素模式时为 <code>?page_id=页面ID</code>）。也可以新建页面并选择「幸运大转盘」模板。', 'xi'),
+            ),
+            array(
+                'id'      => 'wheel_title',
+                'type'    => 'text',
+                'title'   => __('页面标题', 'xi'),
+                'default' => __('幸运大转盘', 'xi'),
+            ),
+            array(
+                'id'      => 'wheel_subtitle',
+                'type'    => 'text',
+                'title'   => __('副标题', 'xi'),
+                'default' => __('真随机 · 公平 · 不可预测 · 配置实时保存', 'xi'),
+            ),
+            array(
+                'id'         => 'wheel_items',
+                'type'       => 'textarea',
+                'title'      => __('默认选项与颜色', 'xi'),
+                'desc'       => __('每行一项，格式：名称|颜色（#RRGGBB）。至少 2 项，名称最多 12 个字。访客仍可在页面右侧临时修改，修改保存在各自浏览器；更换默认配置后缓存键会更新。', 'xi'),
+                'default'    => "一等奖|#ff6b6b\n二等奖|#feca57\n三等奖|#48dbfb\n谢谢参与|#ff9ff3\n再来一次|#1dd1a1\n幸运奖|#5f27cd",
+                'attributes' => array('rows' => 10, 'placeholder' => "一等奖|#ff6b6b\n二等奖|#feca57"),
+            ),
+            array(
+                'id'      => 'wheel_sound',
+                'type'    => 'switcher',
+                'title'   => __('转盘音效', 'xi'),
+                'desc'    => __('转动时的滴答声和中奖提示音', 'xi'),
+                'default' => true,
+            ),
+            array(
+                'id'      => 'wheel_confetti',
+                'type'    => 'switcher',
+                'title'   => __('五彩纸屑', 'xi'),
+                'desc'    => __('中奖后播放纸屑动画', 'xi'),
+                'default' => true,
+            ),
+        ),
+    ));
+
+    CSF::createSection($prefix, array(
         'id'     => 'auth',
         'title'  => __('权限管理', 'xi'),
         'icon'   => 'fa fa-fw fa-shield',

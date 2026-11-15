@@ -2,15 +2,24 @@
 
 淡白与青薄荷配色的 WordPress 博客主题，WinUI 3 × 液态玻璃界面，模块化小工具，后台设置基于嵌入式 Codestar Framework（CSF）。
 
-![版本](https://img.shields.io/badge/版本-V1.3-2bb39a) ![WordPress](https://img.shields.io/badge/WordPress-5.6%2B-21759b) ![PHP](https://img.shields.io/badge/PHP-7.0%2B-777bb4) ![许可](https://img.shields.io/badge/许可-GPLv2-blue)
+![版本](https://img.shields.io/badge/版本-V1.4-2bb39a) ![WordPress](https://img.shields.io/badge/WordPress-5.6%2B-21759b) ![PHP](https://img.shields.io/badge/PHP-7.0%2B-777bb4) ![许可](https://img.shields.io/badge/许可-GPLv2-blue)
 
 ![曦主题截图](screenshot.png)
 
 ## 下载
 
-前往 [Releases](https://github.com/ximangya/XITheme/releases) 下载最新版安装包 `xi-V1.3.zip`，在 WordPress 后台「外观 → 主题 → 安装主题 → 上传主题」中上传即可。
+前往 [Releases](https://github.com/ximangya/XITheme/releases) 下载最新版安装包 `xi-V1.4.zip`，在 WordPress 后台「外观 → 主题 → 安装主题 → 上传主题」中上传即可。
 
 > 请下载 Releases 里的安装包，而不是 GitHub 自动生成的「Source code」压缩包：后者的目录名不是 `xi`，直接上传会导致主题名称和路径不一致。
+
+## V1.4 更新
+
+- 新增「幸运大转盘」页面，首次进入后台自动创建，也可用页面模板手动创建
+- 后台可自定义转盘标题、副标题、默认选项与颜色、音效、五彩纸屑
+- 默认选项按「名称|#颜色」逐行配置，支持 2～24 项
+- 服务端密码学随机抽奖，AJAX nonce 校验；前端玻璃转盘、结果弹窗和纸屑动画
+- 访客可在页面右侧临时修改选项和颜色，保存在本机浏览器
+- 完整变更见 [CHANGELOG.md](CHANGELOG.md)
 
 ## V1.3 更新
 
@@ -93,7 +102,7 @@
 
 ## 安装与升级
 
-1. 下载 Releases 中的 `xi-V1.3.zip`
+1. 下载 Releases 中的 `xi-V1.4.zip`
 2. 后台「外观 → 主题 → 安装主题 → 上传主题」，上传并启用
 3. 进入后台「曦主题设置」完成基础配置
 
